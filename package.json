@@ -1,0 +1,21 @@
+{
+  "name": "js-doc-autogen",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node node_modules/jasmine/bin/jasmine.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cancerberoSgx/js-doc-autogen.git"
+  },
+  "devDependencies": {
+    "jasmine": "^2.5.3"
+  },
+  "dependencies": {
+    "underscore": "^1.8.3"
+  }
+}
