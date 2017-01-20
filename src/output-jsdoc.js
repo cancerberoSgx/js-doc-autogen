@@ -16,18 +16,20 @@ var generateJsDocMetadata = function(metadata, bigName)
 	})
 	visitObjectMetadata(metadata, bigName, '', 0, function(md)
 	{
+		var methodNameSplitted = md.absoluteName.split('.')
+		var methodName = methodNameSplitted.pop()
+		var className = methodNameSplitted.join('.')
 	 	if(md.metadata.type == 'Function')
 		{
-			var methodNameSplitted = md.absoluteName.split('.')
-			var methodName = methodNameSplitted.pop()
-			var className = methodNameSplitted.join('.')
 			classes[className].methods = classes[className].methods || []
 			classes[className].methods.push(md)
 		}
-		// else if(md.metadata.type !== 'Object')
-		// {
-		// 	console.log('property', md.absoluteName)
-		// }
+		else if(md.metadata.type !== 'Object')
+		{
+			classes[className].properties = classes[className].properties || []
+			classes[className].properties.push(md)
+			// console.log('property', md.absoluteName)
+		}
 	})
 	return classes
 }
@@ -38,10 +40,14 @@ var generateJsDoc = function(metadata, bigName, moduleName, buffer)
 	buffer.push('@module '+moduleName)
 	_.each(classes, function(c)
 	{
-		buffer.push('@class '+c.absoluteName+ ' @public')
+		buffer.push('@class '+c.absoluteName)
+		_.each(c.properties, function(m)
+		{
+			buffer.push('@property ' + m.name)
+		})
 		_.each(c.methods, function(m)
 		{
-			buffer.push('@method ' + m.name + ' @public')
+			buffer.push('@method ' + m.name)
 		})
 	})
 }
@@ -67,6 +73,4 @@ module.exports = generateJsDoc
 // 	,   projectMetadata: './package.json'
 // 	,   vendor: []
 // 	})
-
-// 	console.log('*** Automation documentation generated at automation-jsdocs/index.html ***')
 // }

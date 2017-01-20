@@ -23,6 +23,6 @@ describe('1', ()=>
 		var buffer = docgen.main(config)
 		var s = buffer.join('\n')
 		expect(s.indexOf('@class first.anObject')!==-1).toBe(true)
-		// console.log(s)
+		console.log(s)
 	})
 })
