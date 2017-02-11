@@ -3,6 +3,7 @@ var _ = require('underscore')
 var visitObjectMetadata = require('./index').visitObjectMetadata
 
 //jsdocs
+//this method could be useful by it self by implenting output-shortjsdoc-ast
 var generateJsDocMetadata = function(metadata, bigName)
 {
 	var lastClass
@@ -23,12 +24,12 @@ var generateJsDocMetadata = function(metadata, bigName)
 		{
 			classes[className].methods = classes[className].methods || []
 			classes[className].methods.push(md)
+			md.metadata.value = 'function(){}'
 		}
 		else if(md.metadata.type !== 'Object')
 		{
 			classes[className].properties = classes[className].properties || []
 			classes[className].properties.push(md)
-			// console.log('property', md.absoluteName)
 		}
 	})
 	return classes
@@ -53,24 +54,10 @@ var generateJsDoc = function(metadata, bigName, moduleName, buffer)
 }
 
 
-module.exports = generateJsDoc
+module.exports = {
+	generate: generateJsDoc,
+	generateJsDocMetadata: generateJsDocMetadata
+}
 
 
 
-
-// var writeJsdoc = function(buffer)
-// {
-// 	var str = buffer.join('\n')
-// 	str = '/*\n'+str+'\n*/'
-// 	var fs = require('fs')
-// 	fs.writeFileSync('autojsdoc/autojsdoc.js', str)
-
-// 	var ShortJsDoc = require('short-jsdoc')
-
-// 	ShortJsDoc.make({
-// 	    inputDirs: ['autojsdoc']
-// 	,   output: 'automation-jsdocs'
-// 	,   projectMetadata: './package.json'
-// 	,   vendor: []
-// 	})
-// }

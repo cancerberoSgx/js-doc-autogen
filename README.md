@@ -5,3 +5,9 @@ The idea of this tool is to explire a live js environment at some point, and fro
 Requirement: output is pluggable - now we have shortjsdoc impl but it couold also be json-schema (examine in editor)
 
 Requirement: it can run anywhere thanks to browserify: we can run it in node, browser, rhino, etc
+
+#TODO
+
+ * parse method.toString() to get parameter / signature
+ * ouptut in json schema
+ * output in typescript definitions

@@ -1,8 +1,8 @@
 var _ = require('underscore')
 
-//requires underscore : _.isFunction _.isArray, _.is*
 
 
+// metadata - TODO: move to metadata.js
 // object exploration and types
 
 var getJsObjectMetadata = function(o)
@@ -52,7 +52,8 @@ var extractObjectMetadatas = function(sourceObject, sourceObjectName, recurse)
 		result[key] = metadata
 		if(recurse && metadata.type=='Object') 
 		{
-			_.extend(result[key], extractObjectMetadatas(value, key, true))
+			
+				_.extend(result[key], extractObjectMetadatas(value, key, true))
 		}
 		else if(recurse && metadata.type=='Array' && value && value.length)
 		{
@@ -102,6 +103,14 @@ var visitObjectMetadata = function(metadata, name, parentName, level, visitor)
 var main = function(config)
 {
 	var mainModule = config.mainModule || 'main-module'
+
+	var outputImplementation = config.outputImplementation
+	if(!outputImplementation)
+	{
+		throw Error('Aborting, please provide an outputImplementation. Some possible values: shortjsdoc')
+	}
+	var generateJsDoc = require('./output-'+outputImplementation).generate
+
 	// var excludeGlobals = ['requestHandler', 'eventHandler', 'process']
 
 	globalThis = config.targetObjects
@@ -125,9 +134,9 @@ var main = function(config)
 			
 			if(_.isFunction(target))
 			{
-			// 	buffer.push('@module '+mainModule)
-			// 	buffer.push('@function '+globalProperty)
-			// 	// var metadata = extractObjectMetadatas(target, 'LoginRegister', true)
+				buffer.push('@module '+mainModule)
+				buffer.push('@function '+globalProperty)
+				// var metadata = extractObjectMetadatas(target, 'LoginRegister', true)
 				// console.log('global function ', globalProperty )
 			// 	//TODO
 			}
@@ -135,15 +144,22 @@ var main = function(config)
 			else if(_.isObject(target))
 			{
 				// console.log(globalProperty)	
-				var metadata = extractObjectMetadatas(target, globalProperty, true)
+				var metadata
+				try
+				{
+					metadata = extractObjectMetadatas(target, globalProperty, true)
+				}
+				catch(ex)
+				{
+					// this could be caused by a "Maximum call stack size exceeded"
+					console.log('ERROR. WARNING. If the exception is "Maximum call stack size exceeded" then is your failt. '+
+						'\nPlease give us an object with no cycles!')
+					throw ex
+				}
 				var module = mainModule+'.'+globalProperty
-				var generateJsDoc = require('./output-jsdoc')
 				generateJsDoc(metadata, globalProperty, module, buffer)
 			}
 		}
-
-		// writeJsdoc(buffer)
-		// console.log(buffer.join('\n'))
 	})
 	
 	return buffer

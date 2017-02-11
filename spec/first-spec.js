@@ -1,11 +1,10 @@
 var docgen = require('../src')
 
-describe('1', ()=>
+// var global = this
+describe('first ones', ()=>
 {
-	it('should', ()=>
+	it('output-short-jsdoc', ()=>
 	{
-		expect(1).toBe(1)
-
 		var context = {
 			first: {
 				hello: 'world', fn: function(){}, 
@@ -14,15 +13,45 @@ describe('1', ()=>
 					method1: function(){},
 					sudo: {password: function(){}}
 				}
-			}
+			},
+			self: require('fs'),
+			globalFn : function(a,b,c){}
 		}
 		var config = {
 			target: context,
+			outputImplementation: 'shortjsdoc',
 			excludeNames: ['sudo.password']
 		}
 		var buffer = docgen.main(config)
 		var s = buffer.join('\n')
 		expect(s.indexOf('@class first.anObject')!==-1).toBe(true)
-		console.log(s)
+		expect(s.indexOf('@function globalFn')!==-1).toBe(true)
+		// console.log(s)
 	})
+
+	// it('output-short-jsdoc-ast', ()=>
+	// {
+	// 	var context = {
+	// 		first: {
+	// 			hello: 'world', fn: function(){}, 
+	// 			anObject: {
+	// 				foo: '0who',
+	// 				method1: function(){},
+	// 				sudo: {password: function(){}}
+	// 			}
+	// 		},
+	// 		self: require('fs'),
+	// 		globalFn : function(a,b,c){}
+	// 	}
+	// 	var config = {
+	// 		target: context,
+	// 		outputImplementation: 'shortjsdoc-ast',
+	// 		excludeNames: ['sudo.password']
+	// 	}
+	// 	var buffer = docgen.main(config)
+	// 	console.log(buffer.join(''))
+	// 	var ast = JSON.parse(buffer.join(''))
+
+	// 	expect(_.keys(ast.classes.self).length>0).toBe(true)
+	// })
 })
