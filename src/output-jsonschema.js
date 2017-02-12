@@ -20,11 +20,6 @@ var generateJsDocMetadata = function(metadata, bigName)
 		var methodNameSplitted = md.absoluteName.split('.')
 		var methodName = methodNameSplitted.pop()
 		var className = methodNameSplitted.join('.')
-		// if(!className || !classes[className])
-		// {
-		// 	console.log('className', className)
-		// 	return
-		// }
 	 	if(md.metadata.type == 'Function')
 		{
 			classes[className].methods = classes[className].methods || []
@@ -46,16 +41,7 @@ var generateJsDoc = function(config)
 	var bigName = config.bigName
 	var moduleName = config.module
 	var buffer = config.buffer
-	// if(_.isFunction(metadata))
-	// {
-	// 	buffer.push('@module '+mainModule)
-	// 	buffer.push('@function '+globalProperty)
-	// 	// var metadata = extractObjectMetadatas(metadata, 'LoginRegister', true)
-	// 	// console.log('global function ', globalProperty )
-	// // 	//TODO
-	// }
 
-	// else 
 	if(_.isObject(metadata))
 	{
 		var classes = generateJsDocMetadata(metadata, bigName)
