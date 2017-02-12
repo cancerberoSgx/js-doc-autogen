@@ -109,7 +109,7 @@ var main = function(config)
 	{
 		throw Error('Aborting, please provide an outputImplementation. Some possible values: shortjsdoc')
 	}
-	var generateJsDoc = require('./output-'+outputImplementation).generate
+	var generateOutput = require('./output-'+outputImplementation).generate
 
 	// var excludeGlobals = ['requestHandler', 'eventHandler', 'process']
 
@@ -131,34 +131,24 @@ var main = function(config)
 			}
 
 			var target = globalContext[globalProperty]
-			
-			if(_.isFunction(target))
-			{
-				buffer.push('@module '+mainModule)
-				buffer.push('@function '+globalProperty)
-				// var metadata = extractObjectMetadatas(target, 'LoginRegister', true)
-				// console.log('global function ', globalProperty )
-			// 	//TODO
-			}
 
-			else if(_.isObject(target))
+			// console.log(globalProperty)	
+			var metadata
+			try
 			{
-				// console.log(globalProperty)	
-				var metadata
-				try
-				{
-					metadata = extractObjectMetadatas(target, globalProperty, true)
-				}
-				catch(ex)
-				{
-					// this could be caused by a "Maximum call stack size exceeded"
-					console.log('ERROR. WARNING. If the exception is "Maximum call stack size exceeded" then is your failt. '+
-						'\nPlease give us an object with no cycles!')
-					throw ex
-				}
-				var module = mainModule+'.'+globalProperty
-				generateJsDoc(metadata, globalProperty, module, buffer)
+				metadata = extractObjectMetadatas(target, globalProperty, true)
 			}
+			catch(ex)
+			{
+				// this could be caused by a "Maximum call stack size exceeded"
+				console.log('ERROR. WARNING. If the exception is "Maximum call stack size exceeded" then is your failt. '+
+					'\nPlease give us an object with no cycles!')
+				throw ex
+			}
+			var module = mainModule+'.'+globalProperty
+			generateOutput(metadata, globalProperty, module, buffer)
+
+			
 		}
 	})
 	

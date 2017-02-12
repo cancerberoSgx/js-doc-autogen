@@ -20,6 +20,11 @@ var generateJsDocMetadata = function(metadata, bigName)
 		var methodNameSplitted = md.absoluteName.split('.')
 		var methodName = methodNameSplitted.pop()
 		var className = methodNameSplitted.join('.')
+		// if(!className || !classes[className])
+		// {
+		// 	console.log('className', className)
+		// 	return
+		// }
 	 	if(md.metadata.type == 'Function')
 		{
 			classes[className].methods = classes[className].methods || []
@@ -37,20 +42,35 @@ var generateJsDocMetadata = function(metadata, bigName)
 
 var generateJsDoc = function(metadata, bigName, moduleName, buffer)
 {
-	var classes = generateJsDocMetadata(metadata, bigName)
-	buffer.push('@module '+moduleName)
-	_.each(classes, function(c)
+	if(_.isFunction(metadata))
 	{
-		buffer.push('@class '+c.absoluteName)
-		_.each(c.properties, function(m)
+		buffer.push('@module '+mainModule)
+		buffer.push('@function '+globalProperty)
+		// var metadata = extractObjectMetadatas(metadata, 'LoginRegister', true)
+		// console.log('global function ', globalProperty )
+	// 	//TODO
+	}
+
+	else if(_.isObject(metadata))
+	{
+		var classes = generateJsDocMetadata(metadata, bigName)
+		buffer.push('@module '+moduleName)
+		_.each(classes, function(c)
 		{
-			buffer.push('@property ' + m.name)
+			buffer.push('@class '+c.absoluteName)
+			_.each(c.properties, function(m)
+			{
+				buffer.push('@property ' + m.name)
+			})
+			_.each(c.methods, function(m)
+			{
+				buffer.push('@method ' + m.name)
+			})
 		})
-		_.each(c.methods, function(m)
-		{
-			buffer.push('@method ' + m.name)
-		})
-	})
+	}
+
+
+	
 }
 
 
