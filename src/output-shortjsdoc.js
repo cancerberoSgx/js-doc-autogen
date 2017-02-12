@@ -40,8 +40,12 @@ var generateJsDocMetadata = function(metadata, bigName)
 	return classes
 }
 
-var generateJsDoc = function(metadata, bigName, moduleName, buffer)
+var generateJsDoc = function(config)
 {
+	var metadata = config.metadata
+	var bigName = config.bigName
+	var moduleName = config.module
+	var buffer = config.buffer
 	if(_.isFunction(metadata))
 	{
 		buffer.push('@module '+mainModule)

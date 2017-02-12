@@ -16,6 +16,8 @@
     "jasmine": "^2.5.3"
   },
   "dependencies": {
+    "shelljs": "^0.7.6",
+    "short-jsdoc": "^0.2.8",
     "underscore": "^1.8.3"
   }
 }

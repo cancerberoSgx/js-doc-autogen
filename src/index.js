@@ -146,7 +146,15 @@ var main = function(config)
 				throw ex
 			}
 			var module = mainModule+'.'+globalProperty
-			generateOutput(metadata, globalProperty, module, buffer)
+
+			var generatorConfig = {
+				metadata: metadata,
+				bigName: globalProperty,
+				module: module,
+				buffer: buffer
+			}
+			_.extend(generatorConfig, config)
+			generateOutput(generatorConfig)
 
 			
 		}
