@@ -98,4 +98,35 @@ describe('first ones', ()=>
 	// 	// }, 20)
 		
 	// })
+
+
+
+	it('output-jsonschema', ()=>
+	{
+		var context = {
+			first: {
+				hello: 'world', fn: function(){}, 
+				anObject: {
+					foo: '0who',
+					method1: function(){},
+					sudo: {password: function(){}},
+					anidado: {another: {finalProp: 'hey!'}}
+				}
+			},
+			self: require('fs')
+			// globalFn : function(a,b,c){}
+		}
+		var config = {
+			target: context,
+			outputImplementation: 'jsonschema',
+			excludeNames: ['sudo.password']
+		}
+		var buffer = docgen.main(config)
+		var s = '[' + buffer.join(', ') + ']'
+
+		var schema = JSON.parse(s)
+		// console.log(schema)
+
+		var oneSelf = expect(_.find(schema, (s)=>{return s.title=='first'}).properties.hello.type).toBe('string')
+	})
 })

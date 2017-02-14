@@ -1,74 +1,64 @@
 //output plugin for jsdoc
 var _ = require('underscore')
+
 var visitObjectMetadata = require('./metadata').visitObjectMetadata
 
-//jsdocs
-//this method could be useful by it self by implenting output-shortjsdoc-ast
-var generateJsDocMetadata = function(metadata, bigName)
-{
-	var lastClass
-	var classes = {}
-	visitObjectMetadata(metadata, bigName, '', 0, function(md)
-	{
-		if(md.metadata.type == 'Object')
-		{
-			classes[md.absoluteName] = md
-		}
-	})
-	visitObjectMetadata(metadata, bigName, '', 0, function(md)
-	{
-		var methodNameSplitted = md.absoluteName.split('.')
-		var methodName = methodNameSplitted.pop()
-		var className = methodNameSplitted.join('.')
-	 	if(md.metadata.type == 'Function')
-		{
-			classes[className].methods = classes[className].methods || []
-			classes[className].methods.push(md)
-			md.metadata.value = 'function(){}'
-		}
-		else if(md.metadata.type !== 'Object')
-		{
-			classes[className].properties = classes[className].properties || []
-			classes[className].properties.push(md)
-		}
-	})
-	return classes
-}
-
-var generateJsDoc = function(config)
+var generateJsonSchema = function(config)
 {
 	var metadata = config.metadata
 	var bigName = config.bigName
 	var moduleName = config.module
 	var buffer = config.buffer
 
-	if(_.isObject(metadata))
+	if(_.isObject(metadata) && metadata.type=='Object')
 	{
-		var classes = generateJsDocMetadata(metadata, bigName)
-		buffer.push('@module '+moduleName)
-		_.each(classes, function(c)
+		var schemaNode = {
+			title: bigName, 
+			type: 'object'
+		}
+		doJsonSchemaObject(metadata, schemaNode, 0)
+
+// require("copy-paste").copy(JSON.stringify(schemaNode))
+
+		// console.log(schemaNode)
+
+		buffer.push(JSON.stringify(schemaNode))
+		
+		// visitObjectMetadata(metadata, 'name1', 'parentName1', 0, (node)=>{
+		// 	console.log(arguments)
+		// })
+		// console.log(JSON.stringify(metadata, 0, 4))
+	}
+}
+
+var doJsonSchemaObject = function(metadata, schemaNode, level)
+{
+	if(metadata.type=='Object')
+	{
+		schemaNode.type = 'object'
+		_.each(metadata.objectMetadata, (p, pname)=>
 		{
-			buffer.push('@class '+c.absoluteName)
-			_.each(c.properties, function(m)
-			{
-				buffer.push('@property ' + m.name)
-			})
-			_.each(c.methods, function(m)
-			{
-				buffer.push('@method ' + m.name)
-			})
+			var jsprop = {}
+			doJsonSchemaObject(p, jsprop, level+1)
+			schemaNode.properties = schemaNode.properties || {}
+			schemaNode.properties[pname] = jsprop
 		})
 	}
+	else if(metadata.type=='Array') //TODO: items!
+	{
 
+	}
+	else if(metadata.type=='Function') //TODO: items!
+	{
 
+	}
+	else
+	{
+		schemaNode.type = metadata.type.toLowerCase()
+	}
 	
 }
 
-
 module.exports = {
-	generate: generateJsDoc,
-	generateJsDocMetadata: generateJsDocMetadata
+	generate: generateJsonSchema
 }
-
-
-

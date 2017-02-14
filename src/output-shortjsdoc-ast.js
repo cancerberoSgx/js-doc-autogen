@@ -1,3 +1,6 @@
+
+var generateASTMetadata = require('./metadata').generateASTMetadata
+
 module.exports = {
 	generate: function(config)
 	{		
@@ -6,7 +9,7 @@ module.exports = {
 		var module = config.module
 		var buffer = config.buffer
 		var generateJsDocMetadata = require('./output-shortjsdoc').generateJsDocMetadata
-		var classes = generateJsDocMetadata(metadata, bigName)
+		var classes = generateASTMetadata(metadata, bigName)
 		buffer.length=0 //empty array
 		var ast = {
 			classes: classes

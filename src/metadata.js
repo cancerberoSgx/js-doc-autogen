@@ -50,8 +50,7 @@ var extractObjectMetadatas = function(sourceObject, sourceObjectName, recurse)
 		result[key] = metadata
 		if(recurse && metadata.type=='Object') 
 		{
-			
-				_.extend(result[key], extractObjectMetadatas(value, key, true))
+			_.extend(result[key], extractObjectMetadatas(value, key, true))
 		}
 		else if(recurse && metadata.type=='Array' && value && value.length)
 		{
@@ -89,7 +88,48 @@ var visitObjectMetadata = function(metadata, name, parentName, level, visitor)
 	})
 }
 
+
+
+
+//@function generateASTMetadata - generate a class-ast like object very suitable for shortjsdoc - this method could be useful by it self by implenting output-shortjsdoc-ast
+var generateASTMetadata = function(metadata, bigName)
+{
+	var lastClass
+	var classes = {}
+	visitObjectMetadata(metadata, bigName, '', 0, function(md)
+	{
+		if(md.metadata.type == 'Object')
+		{
+			classes[md.absoluteName] = md
+		}
+	})
+	visitObjectMetadata(metadata, bigName, '', 0, function(md)
+	{
+		var methodNameSplitted = md.absoluteName.split('.')
+		var methodName = methodNameSplitted.pop()
+		var className = methodNameSplitted.join('.')
+		// if(!className || !classes[className])
+		// {
+		// 	console.log('className', className)
+		// 	return
+		// }
+	 	if(md.metadata.type == 'Function')
+		{
+			classes[className].methods = classes[className].methods || []
+			classes[className].methods.push(md)
+			md.metadata.value = 'function(){}'
+		}
+		else if(md.metadata.type !== 'Object')
+		{
+			classes[className].properties = classes[className].properties || []
+			classes[className].properties.push(md)
+		}
+	})
+	return classes
+}
+
 module.exports = {
 	visitObjectMetadata: visitObjectMetadata,
-	extractObjectMetadatas: extractObjectMetadatas
+	extractObjectMetadatas: extractObjectMetadatas,
+	generateASTMetadata: generateASTMetadata
 }

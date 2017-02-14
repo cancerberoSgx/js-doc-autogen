@@ -9,7 +9,7 @@ var main = function(config)
 	var outputImplementation = config.outputImplementation
 	if(!outputImplementation)
 	{
-		throw Error('Aborting, please provide an outputImplementation. Some possible values: shortjsdoc')
+		throw Error('Aborting, please provide an outputImplementation. Some possible values: shortjsdoc, jsonschema')
 	}
 	var generateOutput = require('./output-'+outputImplementation).generate
 
