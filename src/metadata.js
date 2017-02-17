@@ -29,7 +29,7 @@ var getJsObjectMetadata = function(o)
 		var fstr = o.toString()+''
 		result = {
 			type: 'Function', 
-			value: fstr,
+			// value: fstr,
 			signature: extractMethodSignature(fstr)
 		}
 	}
@@ -47,19 +47,21 @@ var getJsObjectMetadata = function(o)
 
 function extractMethodSignature(s)
 {
+	var val
 	try
 	{
 		var esprima = require('esprima')
 		// console.log('var a = '+s)
 		var ast = esprima.parse('var a = '+s)
 		var params = ast.body[0].declarations[0].init.params
-		return {params: _.map(params, (p)=>{return p.name})}
+		val = {params: _.map(params, (p)=>{return p.name})}
 	}
 	catch(ex)
 	{
 		//parsing fail - sometimes could be native code ? 
 		return undefined
 	}
+	return val
 	
 	// console.log('seba', s, JSON.stringify(node,0,2))
 	// md.metadata.value = 'function(){}' // clear the actual alue sine it can be huge

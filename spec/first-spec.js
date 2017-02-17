@@ -149,23 +149,22 @@ describe('first ones', ()=>
 					method1: function(averygoodparameter){},
 					sudo: {password: function(){}}
 				}
-			},
-			fs: require('fs')
+			}
+			,
+			second: {foo: 'bar'}
+			// ,
+			// fs: require('fs')
 		}
 		var config = {
 			target: context,
 			outputImplementation: 'ast',
 			excludeNames: ['sudo.password']	
 		}
-		var buffer = docgen.main(config)
-		var s = buffer.join('\n')
-		var ast = JSON.parse(s)
+		docgen.main(config)
+		var ast = config.astOutput
 		// console.log(JSON.stringify(ast,0,2))
 		expect(ast.classes.first.metadata.objectMetadata.anObject.objectMetadata.method1.signature.params[0]).toBe('averygoodparameter')
-		// expect(s.indexOf('@class first.anObject')!==-1).toBe(true)
-		// expect(s.indexOf('@method method1')!==-1).toBe(true)
-		// expect(s.indexOf('@param averygoodparameter')!==-1).toBe(true)
-		// expect(s.indexOf('@function globalFn')!==-1).toBe(true)
+		
 	})
 
 })

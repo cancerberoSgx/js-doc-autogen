@@ -55,8 +55,9 @@ var main = function(config)
 				module: module,
 				buffer: buffer
 			}
-			_.extend(generatorConfig, config)
-			generateOutput(generatorConfig)
+			_.extend(config, generatorConfig)
+			// _.extend(generatorConfig, config)
+			generateOutput(config)
 
 			
 		}
