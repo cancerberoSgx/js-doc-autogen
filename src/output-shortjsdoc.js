@@ -32,9 +32,10 @@ var generateJsDoc = function(config)
 			_.each(c.methods, (m)=>
 			{
 				buffer.push('@method ' + m.name)
-				_.each(m.signature && m.signature.params, (p)=>
+				// console.log(m)
+				_.each(m.metadata.signature.params, (p)=>
 				{
-					buffer.push('@param ' + m)
+					buffer.push('@param ' + p)
 				})
 			})
 		})
