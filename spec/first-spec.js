@@ -5,6 +5,8 @@ var shell = require('shelljs')
 // var global = this
 describe('first ones', ()=>
 {
+
+
 	it('output-short-jsdoc', ()=>
 	{
 		var context = {
@@ -12,24 +14,26 @@ describe('first ones', ()=>
 				hello: 'world', fn: function(){}, 
 				anObject: {
 					foo: '0who',
-					method1: function(){},
+					method1: function(averygoodparameter){},
 					sudo: {password: function(){}}
 				}
 			},
-			self: require('fs')
-			// globalFn : function(a,b,c){}
+			// self: require('fs')
 		}
 		var config = {
 			target: context,
 			outputImplementation: 'shortjsdoc',
-			excludeNames: ['sudo.password']
+			excludeNames: ['sudo.password']	
 		}
 		var buffer = docgen.main(config)
 		var s = buffer.join('\n')
 		expect(s.indexOf('@class first.anObject')!==-1).toBe(true)
+		expect(s.indexOf('@method method1')!==-1).toBe(true)
+		// expect(s.indexOf('@param averygoodparameter')!==-1).toBe(true)
 		// expect(s.indexOf('@function globalFn')!==-1).toBe(true)
 		// console.log(s)
 	})
+
 
 	it('output-short-jsdoc-ast', ()=>
 	{
@@ -104,6 +108,7 @@ describe('first ones', ()=>
 	it('output-jsonschema', ()=>
 	{
 		var context = {
+			// first: {fn1: function(a, b ,c){return a+b*c}}
 			first: {
 				hello: 'world', fn: function(){}, 
 				anObject: {
@@ -113,8 +118,8 @@ describe('first ones', ()=>
 					anidado: {another: {finalProp: 'hey!'}}
 				}
 			},
-			self: require('fs')
-			// globalFn : function(a,b,c){}
+			self: require('fs'),
+			globalFn : function(a,b,c){}
 		}
 		var config = {
 			target: context,
@@ -127,6 +132,43 @@ describe('first ones', ()=>
 		var schema = JSON.parse(s)
 		// console.log(schema)
 
-		var oneSelf = expect(_.find(schema, (s)=>{return s.title=='first'}).properties.hello.type).toBe('string')
+		expect(_.find(schema, (s)=>{return s.title=='first'}).properties.hello.type).toBe('string')
+
 	})
+
+
+
+
+	it('output-ast', ()=>
+	{
+		var context = {
+			first: {
+				hello: 'world', fn: function(){}, 
+				anObject: {
+					foo: '0who',
+					method1: function(averygoodparameter){},
+					sudo: {password: function(){}}
+				}
+			},
+			// self: require('fs')
+		}
+		var config = {
+			target: context,
+			outputImplementation: 'ast',
+			excludeNames: ['sudo.password']	
+		}
+		var buffer = docgen.main(config)
+		var s = buffer.join('\n')
+		var ast = JSON.parse(s)
+		// console.log(JSON.stringify(ast,0,2))
+		expect(ast.classes.first.metadata.objectMetadata.anObject.objectMetadata.method1.signature.params[0]).toBe('averygoodparameter')
+		// expect(s.indexOf('@class first.anObject')!==-1).toBe(true)
+		// expect(s.indexOf('@method method1')!==-1).toBe(true)
+		// expect(s.indexOf('@param averygoodparameter')!==-1).toBe(true)
+		// expect(s.indexOf('@function globalFn')!==-1).toBe(true)
+	})
+
 })
+
+
+

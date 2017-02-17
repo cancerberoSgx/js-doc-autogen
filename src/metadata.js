@@ -27,7 +27,11 @@ var getJsObjectMetadata = function(o)
 	else if(_.isFunction(o))
 	{
 		var fstr = o.toString()+''
-		result = {type: 'Function', value: fstr}
+		result = {
+			type: 'Function', 
+			value: fstr,
+			signature: extractMethodSignature(fstr)
+		}
 	}
 	else if(_.isObject(o))
 	{
@@ -39,6 +43,28 @@ var getJsObjectMetadata = function(o)
 	}
 	return result
 }
+
+
+function extractMethodSignature(s)
+{
+	try
+	{
+		var esprima = require('esprima')
+		// console.log('var a = '+s)
+		var ast = esprima.parse('var a = '+s)
+		var params = ast.body[0].declarations[0].init.params
+		return {params: _.map(params, (p)=>{return p.name})}
+	}
+	catch(ex)
+	{
+		//parsing fail - sometimes could be native code ? 
+		return undefined
+	}
+	
+	// console.log('seba', s, JSON.stringify(node,0,2))
+	// md.metadata.value = 'function(){}' // clear the actual alue sine it can be huge
+}
+
 
 var extractObjectMetadatas = function(sourceObject, sourceObjectName, recurse)
 {
@@ -113,14 +139,19 @@ var generateASTMetadata = function(metadata, bigName)
 		// 	console.log('className', className)
 		// 	return
 		// }
+		if(!className || !classes[className])
+		{
+			return
+		}
 	 	if(md.metadata.type == 'Function')
 		{
 			classes[className].methods = classes[className].methods || []
 			classes[className].methods.push(md)
-			md.metadata.value = 'function(){}'
+			// extractMethodSignature(md)
 		}
 		else if(md.metadata.type !== 'Object')
 		{
+			// console.log(className)
 			classes[className].properties = classes[className].properties || []
 			classes[className].properties.push(md)
 		}

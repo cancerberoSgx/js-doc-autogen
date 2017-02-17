@@ -22,16 +22,20 @@ var generateJsDoc = function(config)
 	{
 		var classes = generateASTMetadata(metadata, bigName)
 		buffer.push('@module '+moduleName)
-		_.each(classes, function(c)
+		_.each(classes, (c)=>
 		{
 			buffer.push('@class '+c.absoluteName)
-			_.each(c.properties, function(m)
+			_.each(c.properties, (m)=>
 			{
 				buffer.push('@property ' + m.name)
 			})
-			_.each(c.methods, function(m)
+			_.each(c.methods, (m)=>
 			{
 				buffer.push('@method ' + m.name)
+				_.each(m.signature && m.signature.params, (p)=>
+				{
+					buffer.push('@param ' + m)
+				})
 			})
 		})
 	}
