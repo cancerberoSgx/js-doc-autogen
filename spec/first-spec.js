@@ -150,7 +150,7 @@ describe('first ones', ()=>
 					sudo: {password: function(){}}
 				}
 			},
-			// self: require('fs')
+			fs: require('fs')
 		}
 		var config = {
 			target: context,
