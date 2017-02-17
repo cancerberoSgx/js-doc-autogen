@@ -1,0 +1,22 @@
+<h3><%= this.propertyLabel %>&nbsp;<a href="<%= this.makeLink(this.jsdoc) %>"><%= this.jsdoc.name%></a></h3>
+
+<% if(!this.asChildView) {%>
+<h3>Of class <a href="#class/<%= this.jsdoc.ownerClass %>">
+	<%= this.simpleName(this.jsdoc.ownerClass, this.ownerModule) %></a>
+</h3>
+<% } %>
+
+<% if (this.jsdoc.text) { %>
+<div class="method-text">
+	<%= this.jsdoc.textHtml %>
+</div>
+<% } %>
+
+<% if(this.jsdoc.type) { %> 
+<span class="property-type"><strong>Type</strong>:&nbsp;</span>
+<%= this.printTypeAsString(this.jsdoc.type) %>
+<% } %> 
+
+<% if(!this.asChildView) {%>
+<div data-type="sources"></div>
+<% } %>

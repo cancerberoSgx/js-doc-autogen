@@ -1,0 +1,299 @@
+<% 
+var self = this; 
+%>
+
+<div class="row class-header">
+	<div class="col-md-4">
+		<h2 class="class-title"><%= this.isInterface?'Interface':'Class'%> <%= this.makeLink(this.jsdoc, true) %></h2>
+	</div>
+	<div class="col-md-4">		
+		<% if (this.jsdoc.extends && this.jsdoc.absoluteName != this.jsdoc.extends.absoluteName && !(this.isInterface && this.jsdoc.extends.name==='Object')) { %>
+		<h3 class="class-extends-title">Extends <%= this.printTypeAsString(this.jsdoc.extends)%></h3>
+		<% } %>
+	</div>
+	<div class="col-md-4">
+		<h3 class="class-module-title">Module <%= this.makeLink(this.jsdoc.module, true) %></h3>
+	</div>
+</div>
+
+
+<% if(!self.options.dontShowOptions) { %>
+<div class="pull-right">&nbsp;&nbsp;<a href="<%= this.makeLink(this.jsdoc, false, {private: this.options.private ? 0 : 1}) %>">
+<%= this.options.private ? 'Show' : 'Hide' %> private properties</a></div> 
+
+<div class="pull-right">&nbsp;&nbsp;<a href="<%= this.makeLink(this.jsdoc, false, {inherited: this.options.inherited ? 0 : 1}) %>">
+<%= this.options.inherited ? 'Hide' : 'Show' %> inherited properties</a></div>
+
+<div class="pull-right">&nbsp;&nbsp;<a href="<%= this.makeLink(this.jsdoc, false, {text: this.options.text ? 0 : 1}) %>">
+<%= this.options.text ? 'Hide' : 'Show' %> partial text</a></div>
+<% } /* if(!self.options.dontShowOptions) */%>
+
+
+<% if(this.jsdoc.implements&&this.jsdoc.implements.length) { %>
+<div class="row"><br/>
+<div class="col-md-12">Implements: <ul>
+<% _.each(this.jsdoc.implements, function(interface){%>
+	<li><%= self.makeLink(interface, true, {text: self.options.text ? 0 : 1}) %></li>
+<% });%>
+</ul>
+</div>
+</div>
+<% }%>
+
+
+<div class="row">
+
+
+<% if(!self.options.dontShowSidebar) {%>
+	<div class="col-md-5">
+
+
+
+		<% if(this.jsdoc.constructors && this.jsdoc.constructors.length) { %>
+		<h3 class='methods'>Constructors</h3>
+		<ul>
+		<%
+		_(this.jsdoc.constructors).each(function(method) { %>
+		<%= self.printMethod(method) %>
+			<li class="constructor">
+				<% if(method.params && method.params.length) { %>
+				Parameters:
+				<ol class="params">
+					<% _(method.params).each(function(param){ %>
+					<li class="param">
+						<span class="param-name"><%= param.name %></span>
+						<span class="param-type"><%= self.printTypeAsString(param.type) %></span> 
+					</li>
+					<% }); %>
+				</ol>
+				<% } %>
+			</li>
+		<% }); %>
+		</ul>
+		<% } %>
+
+
+
+
+		<% if(this.properties && _(this.properties).keys().length) { %>
+		<h3 class='properties'>Properties</h3>
+		<ul>
+		<% 
+		var self = this; 
+		_(this.properties).each(function(p) { 
+			var inherited = !JsDocMaker.classOwnsProperty(self.jsdoc, p); 
+			//TODO: perform this in the view or plugin
+			
+			var inheritedByName = p.absoluteName.substring(0, p.absoluteName.lastIndexOf('.'));
+			var inheritedBy = self.application.data.classes[inheritedByName] || {};
+			
+			%>
+			<li class="property <%= inherited ? 'inherited' : '' %>">
+				<a class='property-name' href="#property/<%= p.absoluteName %>"><%= p.name %></a>
+				<span class="property-type"><%= self.printTypeAsString(p.type) %></span> 
+				<%= !inherited ? '' : ('(inherited by ' + self.printTypeAsString(inheritedBy) + ')') %>
+				<% if (self.options.text) {%> <span class="partial-text"><%= self.makePartialText(p)%></span><% }%>
+			</li>
+		<% }); %>
+		</ul>
+		<% } %>
+
+
+		<% if(this.attributes && _(this.attributes).keys().length) { %>
+		<h3 class='attributes'>attributes</h3>
+		<ul>
+		<% 
+		var self = this; 
+		_(this.attributes).each(function(p) { 
+			var inherited = !JsDocMaker.classOwnsProperty(self.jsdoc, p); 
+			//TODO: perform this in the view or plugin
+			
+			var inheritedByName = p.absoluteName.substring(0, p.absoluteName.lastIndexOf('.'));
+			var inheritedBy = self.application.data.classes[inheritedByName] || {};
+			
+			%>
+			<li class="attribute <%= inherited ? 'inherited' : '' %>">
+				<a class='attribute-name' href="#attribute/<%= p.absoluteName %>"><%= p.name %></a>
+				<span class="attribute-type"><%= self.printTypeAsString(p.type) %></span> 
+				<%= !inherited ? '' : ('(inherited by ' + self.printTypeAsString(inheritedBy) + ')') %>
+				<% if (self.options.text) {%> <span class="partial-text"><%= self.makePartialText(p)%></span><% }%>
+			</li>
+		<% }); %>
+		</ul>
+		<% } %>
+
+		<% if(this.events_ && _(this.events_).keys().length) {%>
+		<h3 class='events'>Events</h3>
+		<ul>
+		<% 
+		var self = this; 
+		_(this.events_).each(function(p) { 
+			var inherited = !JsDocMaker.classOwnsProperty(self.jsdoc, p); 
+			//TODO: perform this in the view or plugin
+			
+			var inheritedByName = p.absoluteName.substring(0, p.absoluteName.lastIndexOf('.'));
+			var inheritedBy = self.application.data.classes[inheritedByName] || {};
+			
+			%>
+			<li class="event <%= inherited ? 'inherited' : '' %>">
+				<a class='event-name' href="#event/<%= p.absoluteName %>"><%= p.name %></a>
+				<span class="event-type"><%= self.printTypeAsString(p.type) %></span> 
+				<%= !inherited ? '' : ('(inherited by ' + self.printTypeAsString(inheritedBy) + ')') %>
+				<% if (self.options.text) {%> <span class="partial-text"><%= self.makePartialText(p)%></span><% }%>
+			</li>
+		<% }); %>
+		</ul>
+		<% } %>
+
+
+
+
+		<% if(this.methods && _(this.methods).keys().length) { %>
+		<h3 class='methods'>Methods</h3>
+		<ul>
+		<%
+		_(this.methods).each(function(method) { 
+			var inherited = !JsDocMaker.classOwnsProperty(self.jsdoc, method); 			
+			var inheritedByName = method.absoluteName.substring(0, method.absoluteName.lastIndexOf('.'));
+			var inheritedBy = self.application.data.classes[inheritedByName] || {};
+		%>
+
+			<li class="method <%= inherited ? 'inherited' : '' %>">
+
+				<!-- method name -->
+				<span class="method-name"><%= self.makeLink(method, true)%></span>
+
+
+				<!-- method params  -->
+				<span class="method-param-decorator">(</span>
+				<% if(method.params && method.params.length) { %>
+				<ol class="params">
+					<% 
+					for(var paramIndex = 0; paramIndex < method.params.length; paramIndex++) {
+						var param = method.params[paramIndex];
+					%>
+					<li class="param">
+						<span class="param-type"><%= self.printTypeAsString(param.type) %></span> 
+						<span class="param-name"><%= param.name %></span>
+						<% if(paramIndex < method.params.length-1) { %>
+						<span class="method-param-decorator">,</span>
+						<% } %>
+					</li>
+					<% } %>
+				</ol>
+				<% } %>
+				<span class="method-param-decorator">)&nbsp;:&nbsp;</span>
+
+
+				<!-- method return type -->
+				<% if(method.returns && (method.returns.type || method.returns.text)) {%>
+				<span class="method-return"><%= self.printTypeAsString(method.returns.type) %></span>
+				<!-- <span class="returns-text"><%= method.returns.text || ''%></span> -->
+				<% } else {%>
+				void
+				<% } %>
+
+
+				<!-- method inherited by  -->
+				<%= !inherited ? '' : ('(inherited by ' + self.printTypeAsString(inheritedBy) + ')') %>
+
+				
+
+				<!-- TODO: do throw here ?  -->
+				
+				<!-- method description -->
+				<% if (self.options.text) {%> <span class="partial-text"><%= self.makePartialText(method)%></span><% }%>
+			</li>
+		<% }); %>
+		</ul>
+		<% } %>
+
+
+
+
+
+	</div>
+
+
+<% } /*if(!self.options.dontShowSidebar)*/ %>
+
+
+	<div class="<%= self.options.dontShowSidebar ? 'col-md-12' : 'col-md-7' %>">
+
+		<% if(this.hierarchy && this.hierarchy.length>2) {%>
+		<div class="class-hierarchy">
+		<h3>Class Hierarchy</h3>
+		<ul>
+		<% _(_(this.hierarchy).reverse()).each(function(c){ %>
+			<li>&gt;&nbsp;<a href="<%= self.makeLink(c)%>"><%= c.name %></a></li>
+		<% }); %>
+		</ul>
+		</div>
+		<%}%>
+
+		<% if(this.knownSubclasses && this.knownSubclasses.length) {%>
+		<div class="known-subclasses">
+		<h3>Known <%= self.isInterface ? 'sub-interfaces' : 'sub-classes'%></h3>
+		<ul class="known-subclasses-list">	
+		<% _(this.knownSubclasses).each(function(c){ %>
+			<li><%= self.makeLink(c, true)%></li>
+		<% }); %>
+		</ul>
+		</div>
+		<%}%>
+
+
+		<% if(!self.options.dontShowOptions) { %>
+		<p><a href="#search?keywords=<%= this.jsdoc.absoluteName%>&propsReferencingType=1">Search Class Usage</a></p>
+		<% } %> 
+		
+		<% var summary_text = this.jsdoc.textHtml || self.getTextHtml(this.jsdoc.text) || this.jsdoc.text || ''; %>
+
+
+
+
+		<% if(summary_text) {%>
+		<h3>Summary</h3>
+		
+		<div class="class-text">
+		<%= summary_text %>
+		</div>
+		<% } %>
+
+
+
+		<% if(this.inlineProperties) {%>
+		<div class="inline-class-properties">
+
+		<% if(_(this.properties).keys().length) { %>
+		<h3>Properties</h3>
+		<div data-type="inline-properties" class="inline-properties"></div>
+		<% } %>
+
+		<% if(_(this.attributes).keys().length) { %>
+		<h3>Attributes</h3>
+		<div data-type="inline-attributes" class="inline-attributes"></div>
+		<% } %>
+
+		<% if(_(this.events_).keys().length) { %>
+		<h3>Events</h3>
+		<div data-type="inline-events" class="inline-events"></div>
+		<% } %>
+
+		<% if(_(this.methods).keys().length) { %>
+		<h3>Methods</h3>
+		<div data-type="inline-methods" class="inline-methods"></div>
+		<% } %>
+
+		</div>
+		<% } %>
+
+
+
+		<% if(!self.options.dontShowSources) {%>
+		<button class="btn btn-info" data-type="sources-collapse">Show/Hide Sources</button>
+		<div data-type="sources" id="class-sources"></div>
+		<%}%>
+
+	</div>
+</div>

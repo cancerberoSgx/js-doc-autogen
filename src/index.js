@@ -4,7 +4,7 @@ var extractObjectMetadatas = require('./metadata').extractObjectMetadatas
 
 var main = function(config)
 {
-	var mainModule = config.mainModule || 'main-module'
+	var mainModule = config.mainModule || 'mainModule'
 
 	var outputImplementation = config.outputImplementation
 	if(!outputImplementation)
