@@ -212,7 +212,7 @@ describe('first ones', ()=>
 		expect(s.indexOf('o1.cycle1.o1')!=-1).toBe(true)
 		// console.log(s)
 
-		// expect(ast.classes.o1.metadata.objectMetadata.anObject.objectMetadata.method1.signature.params[0]).toBe('averygoodparameter')
+		expect(ast.classes.o1.objectMetadata.cycle1.objectMetadata.o1.type).toBe('Object')
 	})
 
 })
