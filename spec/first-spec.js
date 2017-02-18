@@ -5,8 +5,6 @@ var shell = require('shelljs')
 // var global = this
 describe('first ones', ()=>
 {
-
-
 	it('output-short-jsdoc', ()=>
 	{
 		var context = {
@@ -62,46 +60,46 @@ describe('first ones', ()=>
 		expect(_.keys(ast.classes.self).length>0).toBe(true)
 	})
 
-	// it('output-short-jsdoc-html', (cb)=>
-	// {
-	// 	var context = {
-	// 		first: {
-	// 			hello: 'world', fn: function(){}, 
-	// 			anObject: {
-	// 				foo: '0who',
-	// 				method1: function(){},
-	// 				sudo: {password: function(){}}
-	// 			}
-	// 		},
-	// 		fs: require('fs')
-	// 	}
-	// 	var config = {
-	// 		target: context,
-	// 		outputImplementation: 'shortjsdoc-html',
-	// 		excludeNames: ['sudo.password'],
-	// 		outputFolder: 'tmp'
-	// 	}
-	// 	docgen.main(config)
+	// // it('output-short-jsdoc-html', (cb)=>
+	// // {
+	// // 	var context = {
+	// // 		first: {
+	// // 			hello: 'world', fn: function(){}, 
+	// // 			anObject: {
+	// // 				foo: '0who',
+	// // 				method1: function(){},
+	// // 				sudo: {password: function(){}}
+	// // 			}
+	// // 		},
+	// // 		fs: require('fs')
+	// // 	}
+	// // 	var config = {
+	// // 		target: context,
+	// // 		outputImplementation: 'shortjsdoc-html',
+	// // 		excludeNames: ['sudo.password'],
+	// // 		outputFolder: 'tmp'
+	// // 	}
+	// // 	docgen.main(config)
 
-	// 	// var jsdoc = shell.cat('tmp/output-jsdocs/data.json').toString()
-	// 	// jsdoc = jsdoc.substring('window.__shortjsdoc_data = '.length, jsdoc.length)
-	// 	// console.log(jsdoc)
-	// 	// jsdoc = JSON.parse(jsdoc)
-	// 	// expect(_.keys(ast.classes.self).length>0).toBe(true)
-	// 	cb()
+	// // 	// var jsdoc = shell.cat('tmp/output-jsdocs/data.json').toString()
+	// // 	// jsdoc = jsdoc.substring('window.__shortjsdoc_data = '.length, jsdoc.length)
+	// // 	// console.log(jsdoc)
+	// // 	// jsdoc = JSON.parse(jsdoc)
+	// // 	// expect(_.keys(ast.classes.self).length>0).toBe(true)
+	// // 	cb()
 
 			
-	// 	// setTimeout(function()
-	// 	// {
-	// 	// 	var jsdoc = shell.cat('tmp/output-jsdocs/data.json').toString()
-	// 	// 	// jsdoc = jsdoc.substring('window.__shortjsdoc_data = '.length, jsdoc.length)
-	// 	// 	console.log(jsdoc)
-	// 	// 	// jsdoc = JSON.parse(jsdoc)
-	// 	// 	// expect(_.keys(ast.classes.self).length>0).toBe(true)
-	// 	// 	cb()
-	// 	// }, 20)
+	// // 	// setTimeout(function()
+	// // 	// {
+	// // 	// 	var jsdoc = shell.cat('tmp/output-jsdocs/data.json').toString()
+	// // 	// 	// jsdoc = jsdoc.substring('window.__shortjsdoc_data = '.length, jsdoc.length)
+	// // 	// 	console.log(jsdoc)
+	// // 	// 	// jsdoc = JSON.parse(jsdoc)
+	// // 	// 	// expect(_.keys(ast.classes.self).length>0).toBe(true)
+	// // 	// 	cb()
+	// // 	// }, 20)
 		
-	// })
+	// // })
 
 
 
@@ -161,7 +159,7 @@ describe('first ones', ()=>
 		docgen.main(config)
 		var ast = config.astOutput
 		// console.log(JSON.stringify(ast,0,2))
-		expect(ast.classes.first.metadata.objectMetadata.anObject.objectMetadata.method1.signature.params[0]).toBe('averygoodparameter')
+		expect(ast.classes.first.objectMetadata.anObject.objectMetadata.method1.signature.params[0]).toBe('averygoodparameter')
 	})
 
 
@@ -208,7 +206,10 @@ describe('first ones', ()=>
 		docgen.main(config)
 		var ast = config.astOutput
 		var s = JSON.stringify(ast, 0, 2)
+
+		//wont print the special property created for marking  cycles
 		expect(s.indexOf(require('../src/metadata').veryStrangePropertyNameForCycles)==-1).toBe(true)
+		expect(s.indexOf('o1.cycle1.o1')!=-1).toBe(true)
 		// console.log(s)
 
 		// expect(ast.classes.o1.metadata.objectMetadata.anObject.objectMetadata.method1.signature.params[0]).toBe('averygoodparameter')

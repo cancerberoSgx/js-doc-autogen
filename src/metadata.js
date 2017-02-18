@@ -54,7 +54,9 @@ function extractMethodSignature(s)
 		// console.log('var a = '+s)
 		var ast = esprima.parse('var a = '+s)
 		var params = ast.body[0].declarations[0].init.params
-		val = {params: _.map(params, (p)=>{return p.name})}
+		val = {
+			params: _.map(params, (p)=>{return p.name})
+		}
 	}
 	catch(ex)
 	{
@@ -120,10 +122,12 @@ var visitObjectMetadata = function(metadata, name, parentName, level, visitor)
 	}
 	var visitable = {
 		name: name, 
-		metadata: metadata, 
-		absoluteName: absoluteName,
-		level: level
+		// metadata: metadata, 
+		absoluteName: absoluteName
+		// ,
+		// level: level
 	}
+	_.extend(visitable, metadata)
 	visitor(visitable)
 	_.each(metadata.objectMetadata, function(childMeta, childName)
 	{
@@ -141,7 +145,7 @@ var generateASTMetadata = function(metadata, bigName)
 	var classes = {}
 	visitObjectMetadata(metadata, bigName, '', 0, function(md)
 	{
-		if(md.metadata.type == 'Object')
+		if(md.type == 'Object')
 		{
 			classes[md.absoluteName] = md
 		}
@@ -160,13 +164,13 @@ var generateASTMetadata = function(metadata, bigName)
 		{
 			return
 		}
-	 	if(md.metadata.type == 'Function')
+	 	if(md.type == 'Function')
 		{
 			classes[className].methods = classes[className].methods || []
 			classes[className].methods.push(md)
 			// extractMethodSignature(md)
 		}
-		else if(md.metadata.type !== 'Object')
+		else if(md.type !== 'Object')
 		{
 			// console.log(className)
 			classes[className].properties = classes[className].properties || []
