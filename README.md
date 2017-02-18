@@ -1,4 +1,8 @@
-automatic object discovery and documentation - research project
+[![Build Status](https://travis-ci.org/cancerberoSgx/short-jsdoc.png?branch=master)](https://travis-ci.org/cancerberoSgx/short-jsdoc)
+
+#automatic object discovery and documentation
+
+Research project
 
 The idea of this tool is to explire a live js environment at some point, and from the properties discovered build some documentation  in the form of object oriented programming - json-schema
 
