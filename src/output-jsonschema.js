@@ -18,16 +18,7 @@ var generateJsonSchema = function(config)
 		}
 		doJsonSchemaObject(metadata, schemaNode, 0)
 
-// require("copy-paste").copy(JSON.stringify(schemaNode))
-
-		// console.log(schemaNode)
-
 		buffer.push(JSON.stringify(schemaNode))
-		
-		// visitObjectMetadata(metadata, 'name1', 'parentName1', 0, (node)=>{
-		// 	console.log(arguments)
-		// })
-		// console.log(JSON.stringify(metadata, 0, 4))
 	}
 }
 

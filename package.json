@@ -1,6 +1,6 @@
 {
   "name": "js-doc-autogen",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,8 @@
     "url": "https://github.com/cancerberoSgx/js-doc-autogen.git"
   },
   "devDependencies": {
-    "jasmine": "^2.5.3"
+    "jasmine": "^2.5.3",
+    "short-jsdoc": "^0.2.8"
   },
   "dependencies": {
     "esprima": "^3.1.3",

@@ -2,7 +2,7 @@
 
 #automatic object discovery and documentation
 
-Research project
+* This is a Research project *
 
 The idea of this tool is to explire a live js environment at some point, and from the properties discovered build some documentation  in the form of object oriented programming - json-schema
 
@@ -12,7 +12,8 @@ Requirement: it can run anywhere thanks to browserify: we can run it in node, br
 
 #TODO
 
- * parse method.toString() to get parameter / signature
- * ouptut in json schema
- * output in typescript definitions
- * arrays
+(TODO)[https://github.com/cancerberoSgx/js-doc-autogen/blob/master/TODO.md]
+
+#Changelist
+
+(TODO)[https://github.com/cancerberoSgx/js-doc-autogen/blob/master/Changelist.md]

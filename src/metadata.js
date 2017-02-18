@@ -65,9 +65,6 @@ function extractMethodSignature(s)
 		return undefined
 	}
 	return val
-	
-	// console.log('seba', s, JSON.stringify(node,0,2))
-	// md.metadata.value = 'function(){}' // clear the actual alue sine it can be huge
 }
 
 var veryStrangePropertyNameForCycles = '___should_neverneverhappen12322'
@@ -123,10 +120,7 @@ var visitObjectMetadata = function(metadata, name, parentName, level, visitor)
 	}
 	var visitable = {
 		name: name, 
-		// metadata: metadata, 
 		absoluteName: absoluteName
-		// ,
-		// level: level
 	}
 	_.extend(visitable, metadata)
 	visitor(visitable)
@@ -141,6 +135,5 @@ var visitObjectMetadata = function(metadata, name, parentName, level, visitor)
 module.exports = {
 	visitObjectMetadata: visitObjectMetadata,
 	extractObjectMetadatas: extractObjectMetadatas,
-	// generateASTMetadata: generateASTMetadata,
 	veryStrangePropertyNameForCycles: veryStrangePropertyNameForCycles
 }

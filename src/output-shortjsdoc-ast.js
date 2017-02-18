@@ -6,9 +6,9 @@ module.exports = {
 	{		
 		var metadata = config.metadata
 		var bigName = config.bigName
-		var module = config.module
+		// var module = config.module
 		var buffer = config.buffer
-		var generateJsDocMetadata = require('./output-shortjsdoc').generateJsDocMetadata
+		// var generateJsDocMetadata = require('./output-shortjsdoc').generateJsDocMetadata
 		var classes = generateOopAst(metadata, bigName)
 		buffer.length=0 //empty array
 		var ast = {

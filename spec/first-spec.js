@@ -1,6 +1,7 @@
 var docgen = require('../src')
 var _ = require('underscore')
 var shell = require('shelljs')
+var path = require('path')
 
 // var global = this
 describe('first ones', ()=>
@@ -61,46 +62,37 @@ describe('first ones', ()=>
 		expect(_.keys(ast.classes.self).length>0).toBe(true)
 	})
 
-	// // it('output-short-jsdoc-html', (cb)=>
-	// // {
-	// // 	var context = {
-	// // 		first: {
-	// // 			hello: 'world', fn: function(){}, 
-	// // 			anObject: {
-	// // 				foo: '0who',
-	// // 				method1: function(){},
-	// // 				sudo: {password: function(){}}
-	// // 			}
-	// // 		},
-	// // 		fs: require('fs')
-	// // 	}
-	// // 	var config = {
-	// // 		target: context,
-	// // 		outputImplementation: 'shortjsdoc-html',
-	// // 		excludeNames: ['sudo.password'],
-	// // 		outputFolder: 'tmp'
-	// // 	}
-	// // 	docgen.main(config)
+	it('output-short-jsdoc-html', (cb)=>
+	{
+		var context = {
+			first: {
+				hello: 'world', fn: function(){}, 
+				anObject: {
+					foo: '0who',
+					method1: function(){},
+					sudo: {password: function(){}}
+				}
+			}
+		}
 
-	// // 	// var jsdoc = shell.cat('tmp/output-jsdocs/data.json').toString()
-	// // 	// jsdoc = jsdoc.substring('window.__shortjsdoc_data = '.length, jsdoc.length)
-	// // 	// console.log(jsdoc)
-	// // 	// jsdoc = JSON.parse(jsdoc)
-	// // 	// expect(_.keys(ast.classes.self).length>0).toBe(true)
-	// // 	cb()
+		var outputFolder = 'tmp'
+		var config = {
+			target: context,
+			outputImplementation: 'shortjsdoc-html',
+			excludeNames: ['sudo.password'],
+			outputFolder: outputFolder
+		}
+		docgen.main(config)
 
-			
-	// // 	// setTimeout(function()
-	// // 	// {
-	// // 	// 	var jsdoc = shell.cat('tmp/output-jsdocs/data.json').toString()
-	// // 	// 	// jsdoc = jsdoc.substring('window.__shortjsdoc_data = '.length, jsdoc.length)
-	// // 	// 	console.log(jsdoc)
-	// // 	// 	// jsdoc = JSON.parse(jsdoc)
-	// // 	// 	// expect(_.keys(ast.classes.self).length>0).toBe(true)
-	// // 	// 	cb()
-	// // 	// }, 20)
-		
-	// // })
+		var f = path.join(outputFolder, 'data.json')
+		var jsdoc = shell.cat(f).toString()
+		jsdoc = jsdoc.substring('window.__shortjsdoc_data = '.length, jsdoc.length)
+		jsdoc = JSON.parse(jsdoc)
+		// console.log(jsdoc)
+		expect(_.keys(jsdoc.classes).length>0).toBe(true)
+		shell.rm('-rf', outputFolder)
+		cb()
+	})
 
 
 
@@ -219,22 +211,22 @@ describe('first ones', ()=>
 
 	
 
-	it('output-ast-arrays', ()=>
-	{
-		var context = {
-			first: {
-				arrayProperty: [{insideArrayProp1: true, arrayPropertyFn: function(c) {}}]
-			}
-		}
-		var config = {
-			target: context,
-			outputImplementation: 'ast'
-		}
-		docgen.main(config)
-		var ast = config.astOutput
-		console.log(JSON.stringify(ast,0,2))
-		// expect(ast.classes.first.objectMetadata.anObject.objectMetadata.method1.signature.params[0]).toBe('averygoodparameter')
-	})
+	// it('output-ast-arrays', ()=>
+	// {
+	// 	var context = {
+	// 		first: {
+	// 			arrayProperty: [{insideArrayProp1: true, arrayPropertyFn: function(c) {}}]
+	// 		}
+	// 	}
+	// 	var config = {
+	// 		target: context,
+	// 		outputImplementation: 'ast'
+	// 	}
+	// 	docgen.main(config)
+	// 	var ast = config.astOutput
+	// 	console.log(JSON.stringify(ast,0,2))
+	// 	// expect(ast.classes.first.objectMetadata.anObject.objectMetadata.method1.signature.params[0]).toBe('averygoodparameter')
+	// })
 
 
 })

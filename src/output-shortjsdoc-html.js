@@ -1,58 +1,32 @@
-// var shell = require('shelljs')
-// var ShortJsDoc = require('short-jsdoc')
-// var fs = require('fs')
-// var path = require('path')
-// module.exports = {
-// 	generate: function(config)
-// 	{
-// 		console.log('seba, generate html')
-// 		// var metadata = config.metadata
-// 		// var bigName = config.bigName
-// 		// var module = config.module
-// 		var outputFolder = config.outputFolder
-// 		if(!outputFolder)
-// 		{
-// 			console.log('Aborting. Please provide outputFolder')
-// 			process.exit(1)
-// 		}
-// 		var generate = require('./output-shortjsdoc').generate
-// 		generate.apply(this, arguments)
-// 		var str = config.buffer.join('\n')
-// 		str = '/*\n'+str+'\n*/'
-// 		shell.rm('-rf', outputFolder)
-// 		shell.mkdir(outputFolder)
-// 		shell.mkdir(path.join(outputFolder, 'inputsrc'))
+var shell = require('shelljs')
+var ShortJsDoc = require('short-jsdoc')
+var fs = require('fs')
+var path = require('path')
+var docgen = require('.')
 
-// 		var file = path.join(outputFolder, 'inputsrc', 'autojsdoc.js')
-// 		fs.writeFileSync(file, str)
-// 		// console.log('sebaaaa', shell.cat(file).toString(), 'sebaaa')
-
-// 		ShortJsDoc.make({
-// 		    inputDirs: [file]
-// 		,   output: 'tmp/output-jsdocs'
-// 		,   projectMetadata: './package.json'
-// 		,   vendor: []
-// 		,	dontMinifyOutput: true
-// 		})
-
-// 	}
-// }
+module.exports = {
+	generate: function(config)
+	{
+		var config2 = {
+			target: config.target,
+			outputImplementation: 'shortjsdoc',
+			excludeNames: ['sudo.password']	
+		}
+		var buffer = docgen.main(config2)
+		var s = '/*\n'+buffer.join('\n')+'\n*/'
+		var outputFolder = config.outputFolder || 'tmp'
+		shell.rm('-rf', outputFolder)
+		shell.mkdir(outputFolder)
+		var file = path.join(outputFolder, 'jsdocinput.js')
+		fs.writeFileSync(file, s)
+		var config3 = {
+			input: [file],
+			output: outputFolder,
+			projectMetadata: config.shortjsdocProjectMetadata || {},
+			vendor: config.shortjsdocVendor  || []
+		}
+		ShortJsDoc.make(config3)
+	}
+}
 
 
-
-// // var writeJsdoc = function(buffer)
-// // {
-// // 	var str = buffer.join('\n')
-// // 	str = '/*\n'+str+'\n*/'
-// // 	var fs = require('fs')
-// // 	fs.writeFileSync('autojsdoc/autojsdoc.js', str)
-
-// // 	var ShortJsDoc = require('short-jsdoc')
-
-// // 	ShortJsDoc.make({
-// // 	    inputDirs: ['autojsdoc']
-// // 	,   output: 'automation-jsdocs'
-// // 	,   projectMetadata: './package.json'
-// // 	,   vendor: []
-// // 	})
-// // }
