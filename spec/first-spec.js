@@ -219,22 +219,22 @@ describe('first ones', ()=>
 
 	
 
-	// it('output-ast-arrays', ()=>
-	// {
-	// 	var context = {
-	// 		first: {
-	// 			arrayProperty: [{insideArrayProp1: true, arrayPropertyFn: function(c) {}}]
-	// 		}
-	// 	}
-	// 	var config = {
-	// 		target: context,
-	// 		outputImplementation: 'ast'
-	// 	}
-	// 	docgen.main(config)
-	// 	var ast = config.astOutput
-	// 	// console.log(JSON.stringify(ast,0,2))
-	// 	// expect(ast.classes.first.objectMetadata.anObject.objectMetadata.method1.signature.params[0]).toBe('averygoodparameter')
-	// })
+	it('output-ast-arrays', ()=>
+	{
+		var context = {
+			first: {
+				arrayProperty: [{insideArrayProp1: true, arrayPropertyFn: function(c) {}}]
+			}
+		}
+		var config = {
+			target: context,
+			outputImplementation: 'ast'
+		}
+		docgen.main(config)
+		var ast = config.astOutput
+		console.log(JSON.stringify(ast,0,2))
+		// expect(ast.classes.first.objectMetadata.anObject.objectMetadata.method1.signature.params[0]).toBe('averygoodparameter')
+	})
 
 
 })
