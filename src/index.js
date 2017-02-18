@@ -36,17 +36,17 @@ var main = function(config)
 
 			// console.log(globalProperty)	
 			var metadata
-			try
-			{
-				metadata = extractObjectMetadatas(target, globalProperty, true)
-			}
-			catch(ex)
-			{
+			// try
+			// {
+				metadata = extractObjectMetadatas(target, globalProperty, true, config.handleCycles)
+			// }
+			// catch(ex)
+			// {
 				// this could be caused by a "Maximum call stack size exceeded"
-				console.log('ERROR. WARNING. If the exception is "Maximum call stack size exceeded" then is your failt. '+
-					'\nPlease give us an object with no cycles!')
-				throw ex
-			}
+				// console.log('ERROR. WARNING. If the exception is "Maximum call stack size exceeded" then is your failt. '+
+				// 	'\nPlease give us an object with no cycles!')
+			// 	throw ex
+			// }
 			var module = mainModule+'.'+globalProperty
 
 			var generatorConfig = {

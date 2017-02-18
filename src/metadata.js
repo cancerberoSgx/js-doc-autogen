@@ -67,22 +67,37 @@ function extractMethodSignature(s)
 	// md.metadata.value = 'function(){}' // clear the actual alue sine it can be huge
 }
 
-
-var extractObjectMetadatas = function(sourceObject, sourceObjectName, recurse)
+var veryStrangePropertyNameForCycles = '___should_neverneverhappen12322'
+var extractObjectMetadatas = function(sourceObject, sourceObjectName, recurse, handleCycles)
 {
 	var result = {}
 	var myMetadata = getJsObjectMetadata(sourceObject)
+	if(handleCycles)
+	{
+		if(sourceObject[veryStrangePropertyNameForCycles])
+		{
+			return //heads up! we stop recursing
+		}
+		else
+		{
+			sourceObject[veryStrangePropertyNameForCycles]=sourceObjectName
+		}
+	}
 	_.each(sourceObject, function(value, key)
 	{
+		if(handleCycles && key == veryStrangePropertyNameForCycles)
+		{
+			return
+		}
 		var metadata = getJsObjectMetadata(value)
 		result[key] = metadata
-		if(recurse && metadata.type=='Object') 
+		if(recurse && metadata.type == 'Object') 
 		{
-			_.extend(result[key], extractObjectMetadatas(value, key, true))
+			_.extend(result[key], extractObjectMetadatas(value, key, true, handleCycles))
 		}
 		else if(recurse && metadata.type=='Array' && value && value.length)
 		{
-			_.extend(result[key], extractObjectMetadatas(value[0], key, true))
+			_.extend(result[key], extractObjectMetadatas(value[0], key, true, handleCycles))
 		}
 	})
 	myMetadata.objectMetadata = result
@@ -164,5 +179,6 @@ var generateASTMetadata = function(metadata, bigName)
 module.exports = {
 	visitObjectMetadata: visitObjectMetadata,
 	extractObjectMetadatas: extractObjectMetadatas,
-	generateASTMetadata: generateASTMetadata
+	generateASTMetadata: generateASTMetadata,
+	veryStrangePropertyNameForCycles: veryStrangePropertyNameForCycles
 }

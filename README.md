@@ -11,3 +11,4 @@ Requirement: it can run anywhere thanks to browserify: we can run it in node, br
  * parse method.toString() to get parameter / signature
  * ouptut in json schema
  * output in typescript definitions
+ * arrays

@@ -137,8 +137,6 @@ describe('first ones', ()=>
 	})
 
 
-
-
 	it('output-ast', ()=>
 	{
 		var context = {
@@ -164,7 +162,56 @@ describe('first ones', ()=>
 		var ast = config.astOutput
 		// console.log(JSON.stringify(ast,0,2))
 		expect(ast.classes.first.metadata.objectMetadata.anObject.objectMetadata.method1.signature.params[0]).toBe('averygoodparameter')
-		
+	})
+
+
+
+	it('if source cycles it fails by default', ()=>
+	{
+		var o1 = {m: function(a){}, p2: 'hello'}
+		o1.cycle1 = {o1: o1}
+		var context = {
+			o1: o1
+		}
+		var config = {
+			target: context,
+			outputImplementation: 'ast',
+			excludeNames: ['sudo.password']
+		}
+		var error
+		try
+		{
+			docgen.main(config)
+		}
+		catch(ex)
+		{
+			error=true
+		}
+		expect(error).toBe(true)
+		// var ast = config.astOutput
+		// console.log(ast)
+	})
+
+	it('if cycles and handleCycles wont fail', ()=>
+	{
+		var o1 = {m: function(a){}, p2: 'hello'}
+		o1.cycle1 = {o1: o1}
+		var context = {
+			o1: o1
+		}
+		var config = {
+			target: context,
+			outputImplementation: 'ast',
+			excludeNames: ['sudo.password'],
+			handleCycles: true
+		}
+		docgen.main(config)
+		var ast = config.astOutput
+		var s = JSON.stringify(ast, 0, 2)
+		expect(s.indexOf(require('../src/metadata').veryStrangePropertyNameForCycles)==-1).toBe(true)
+		// console.log(s)
+
+		// expect(ast.classes.o1.metadata.objectMetadata.anObject.objectMetadata.method1.signature.params[0]).toBe('averygoodparameter')
 	})
 
 })

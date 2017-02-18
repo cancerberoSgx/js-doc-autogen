@@ -30,32 +30,11 @@ fs.writeFileSync(file, s)
 
 
 shell.rm('-rf', 'tmp/output-jsdocs')
-// ShortJsDoc.make({
-//     input: [file]
-// ,   output: 'tmp/output-jsdocs'
-// ,   projectMetadata: './package.json'
-// ,   vendor: []
-// ,	dontMinifyOutput: true
-// })
 
-
-// var ShortJsDoc = require('../..')
 var config = {
 	input: [file],
 	output: 'test_tmp_output',
 	projectMetadata: {},
 	vendor: []
-	// ,
-	// dontMinifyOutput: true
 }
 ShortJsDoc.make(config)
-		// var error = false
-
-		// try 
-		// {
-			
-		// }
-		// catch(ex)
-		// {
-		// 	error = true
-		// }
