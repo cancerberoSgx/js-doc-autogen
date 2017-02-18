@@ -43,7 +43,8 @@ describe('first ones', ()=>
 					method1: function(){},
 					sudo: {password: function(){}}
 				}
-			},
+			}
+			,
 			self: require('fs')
 			// ,
 			// globalFn : function(a,b,c){}
@@ -54,7 +55,7 @@ describe('first ones', ()=>
 			excludeNames: ['sudo.password']
 		}
 		var buffer = docgen.main(config)
-		// console.log(buffer.join(''))
+		// console.log(JSON.stringify(JSON.parse(buffer.join('')),0,2))
 		var ast = JSON.parse(buffer.join(''))
 
 		expect(_.keys(ast.classes.self).length>0).toBe(true)
@@ -148,8 +149,6 @@ describe('first ones', ()=>
 			}
 			,
 			second: {foo: 'bar'}
-			// ,
-			// fs: require('fs')
 		}
 		var config = {
 			target: context,
@@ -159,7 +158,7 @@ describe('first ones', ()=>
 		docgen.main(config)
 		var ast = config.astOutput
 		// console.log(JSON.stringify(ast,0,2))
-		expect(ast.classes.first.objectMetadata.anObject.objectMetadata.method1.signature.params[0]).toBe('averygoodparameter')
+		expect(ast.properties.first.objectMetadata.anObject.objectMetadata.method1.signature.params[0]).toBe('averygoodparameter')
 	})
 
 
@@ -209,11 +208,34 @@ describe('first ones', ()=>
 
 		//wont print the special property created for marking  cycles
 		expect(s.indexOf(require('../src/metadata').veryStrangePropertyNameForCycles)==-1).toBe(true)
-		expect(s.indexOf('o1.cycle1.o1')!=-1).toBe(true)
+		// expect(s.indexOf('o1.cycle1.o1')!=-1).toBe(true)
 		// console.log(s)
 
-		expect(ast.classes.o1.objectMetadata.cycle1.objectMetadata.o1.type).toBe('Object')
+		expect(ast.properties.o1.objectMetadata.cycle1.objectMetadata.o1.type).toBe('Object')
+	
+
+		expect(ast.properties.o1.objectMetadata.cycle1.objectMetadata.o1.type).toBe('Object')
 	})
+
+	
+
+	// it('output-ast-arrays', ()=>
+	// {
+	// 	var context = {
+	// 		first: {
+	// 			arrayProperty: [{insideArrayProp1: true, arrayPropertyFn: function(c) {}}]
+	// 		}
+	// 	}
+	// 	var config = {
+	// 		target: context,
+	// 		outputImplementation: 'ast'
+	// 	}
+	// 	docgen.main(config)
+	// 	var ast = config.astOutput
+	// 	// console.log(JSON.stringify(ast,0,2))
+	// 	// expect(ast.classes.first.objectMetadata.anObject.objectMetadata.method1.signature.params[0]).toBe('averygoodparameter')
+	// })
+
 
 })
 

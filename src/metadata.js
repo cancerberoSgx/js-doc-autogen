@@ -22,6 +22,7 @@ var getJsObjectMetadata = function(o)
 	}
 	else if(_.isArray(o))
 	{
+		// debugger;
 		result = {type: 'Array'}
 	}
 	else if(_.isFunction(o))
@@ -99,7 +100,7 @@ var extractObjectMetadatas = function(sourceObject, sourceObjectName, recurse, h
 		}
 		else if(recurse && metadata.type=='Array' && value && value.length)
 		{
-			_.extend(result[key], extractObjectMetadatas(value[0], key, true, handleCycles))
+			_.extend(result[key], {arrayItemMetadata: extractObjectMetadatas(value[0], key, true, handleCycles)})
 		}
 	})
 	myMetadata.objectMetadata = result
@@ -137,52 +138,9 @@ var visitObjectMetadata = function(metadata, name, parentName, level, visitor)
 
 
 
-
-//@function generateASTMetadata - generate a class-ast like object very suitable for shortjsdoc - this method could be useful by it self by implenting output-shortjsdoc-ast
-var generateASTMetadata = function(metadata, bigName)
-{
-	var lastClass
-	var classes = {}
-	visitObjectMetadata(metadata, bigName, '', 0, function(md)
-	{
-		if(md.type == 'Object')
-		{
-			classes[md.absoluteName] = md
-		}
-	})
-	visitObjectMetadata(metadata, bigName, '', 0, function(md)
-	{
-		var methodNameSplitted = md.absoluteName.split('.')
-		var methodName = methodNameSplitted.pop()
-		var className = methodNameSplitted.join('.')
-		// if(!className || !classes[className])
-		// {
-		// 	console.log('className', className)
-		// 	return
-		// }
-		if(!className || !classes[className])
-		{
-			return
-		}
-	 	if(md.type == 'Function')
-		{
-			classes[className].methods = classes[className].methods || []
-			classes[className].methods.push(md)
-			// extractMethodSignature(md)
-		}
-		else if(md.type !== 'Object')
-		{
-			// console.log(className)
-			classes[className].properties = classes[className].properties || []
-			classes[className].properties.push(md)
-		}
-	})
-	return classes
-}
-
 module.exports = {
 	visitObjectMetadata: visitObjectMetadata,
 	extractObjectMetadatas: extractObjectMetadatas,
-	generateASTMetadata: generateASTMetadata,
+	// generateASTMetadata: generateASTMetadata,
 	veryStrangePropertyNameForCycles: veryStrangePropertyNameForCycles
 }
