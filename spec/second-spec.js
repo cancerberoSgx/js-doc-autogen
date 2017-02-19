@@ -1,44 +1,51 @@
-var docgen = require('../src')
-var _ = require('underscore')
-var shell = require('shelljs')
-var path = require('path')
+// var docgen = require('../src')
+// var _ = require('underscore')
+// var shell = require('shelljs')
+// var path = require('path')
 
-// var global = this
-describe('first ones', ()=>
-{
-
-	it('if cycles and handleCycles wont fail', ()=>
-	{
-		var o1 = {m: function(a){}, p2: 'hello'}
-		o1.cycle1 = {o1: o1}
-		var context = {
-			o1: o1
-		}
-		var config = {
-			target: context,
-			outputImplementation: 'ast',
-			excludeNames: ['sudo.password'],
-			handleCycles: true
-		}
-		docgen.main(config)
-		var ast = config.astOutput
-		var s = JSON.stringify(ast, 0, 2)
-
-		//wont print the special property created for marking  cycles
-		expect(s.indexOf(require('../src/metadata').veryStrangePropertyNameForCycles)==-1).toBe(true)
-		// expect(s.indexOf('o1.cycle1.o1')!=-1).toBe(true)
-		// console.log(s)
-
-		expect(ast.properties.o1.objectMetadata.cycle1.objectMetadata.o1.type).toBe('Object')
-	
-
-		expect(ast.properties.o1.objectMetadata.cycle1.objectMetadata.o1.type).toBe('Object')
-	})
+// // var global = this
+// describe('first ones', ()=>
+// {
 
 	
+// 	it('output-short-jsdoc', ()=>
+// 	{
+// 		var Class = function(){}
+// 		_.extend(Class.prototype,{coolMethod: function(){}})
+
+// 		var context = {
+// 			first: {
+// 				hello: 'world', fn: function(){}, 
+// 				anObject: {
+// 					foo: '0who',
+// 					method1: function(averygoodparameter){},
+// 					sudo: {password: function(){}}
+// 				}
+// 			},
+// 			instance: new Class()
+// 			// self: require('fs')
+// 		}
+// 		var config = {
+// 			target: context,
+// 			outputImplementation: 'shortjsdoc',
+// 			excludeNames: ['first.anObject.sudo.password'],
+// 			levelMax: 1
+// 		}
+// 		var buffer = docgen.main(config)
+// 		var s = buffer.join('\n')
+// 		expect(s.indexOf('@class first.anObject')!==-1).toBe(true)
+// 		expect(s.indexOf('@method method1')!==-1).toBe(true)
+// 		expect(s.indexOf('@param averygoodparameter')!==-1).toBe(true)
+// 		expect(s.indexOf('@method coolMethod')!==-1).toBe(true)
+// 		expect(s.indexOf('@method password')==-1).toBe(true)
+// 		// console.log(s)
+// 	})
 
 
-})
+	
+
+
+// })
 
 
 

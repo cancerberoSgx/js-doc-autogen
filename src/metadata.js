@@ -70,12 +70,16 @@ function extractMethodSignature(s)
 var veryStrangePropertyNameForCycles = '___should_neverneverhappen12322'
 var extractObjectMetadatas = function(config)
 {
+	config.level = config.level || 0
 
-	var sourceObject = config.sourceObject, 
-		sourceObjectName = config.sourceObjectName, 
-		recurse = config.recurse, 
-		handleCycles = config.handleCycles
 
+	if(config.levelMax && config.level > config.levelMax-2)
+	{
+		return 
+	}
+	// console.log(config.sourceObjectName, config.level, config.levelMax)
+
+	var sourceObject = config.sourceObject
 
 	_visitCount++
 	if(_visitMaxCount && _visitCount > _visitMaxCount)
@@ -84,7 +88,7 @@ var extractObjectMetadatas = function(config)
 	}
 	var result = {}
 	var myMetadata = getJsObjectMetadata(sourceObject)
-	if(handleCycles)
+	if(config.handleCycles)
 	{
 		if(sourceObject[veryStrangePropertyNameForCycles])
 		{
@@ -92,67 +96,53 @@ var extractObjectMetadatas = function(config)
 		}
 		else
 		{
-			sourceObject[veryStrangePropertyNameForCycles]=sourceObjectName
+			sourceObject[veryStrangePropertyNameForCycles]=config.sourceObjectName
 		}
 	}
 
 	//heads up ! using _.each for iterating object properties won't visit inherited properties. Concretely, browser's document
-
-	// _.each(sourceObject, function(value, key)
-	// {
-	// 	if(handleCycles && key == veryStrangePropertyNameForCycles)
-	// 	{
-	// 		return
-	// 	}
-	// 	// console.log(key)
-	// 	var metadata = getJsObjectMetadata(value)
-	// 	result[key] = metadata
-	// 	if(recurse && metadata.type == 'Object') 
-	// 	{
-	// 		_.extend(result[key], extractObjectMetadatas(value, key, true, handleCycles))
-	// 	}
-	// 	else if(recurse && metadata.type=='Array' && value && value.length)
-	// 	{
-	// 		_.extend(result[key], {arrayItemMetadata: extractObjectMetadatas(value[0], key, true, handleCycles)})
-	// 	}
-	// })
-
-	var config2
-
-	for(var key2 in sourceObject)
+	
+	iterateObjectProperties(sourceObject, function(key, value)
 	{
-		var value2 = sourceObject[key2]; //heads up - semicolon mandatory here !! 
-
-		(function(key, value)
+		if(config.handleCycles && key == veryStrangePropertyNameForCycles)
 		{
-			if(handleCycles && key == veryStrangePropertyNameForCycles)
-			{
-				return
-			}
-			// console.log(key)
-			var metadata = getJsObjectMetadata(value)
-			result[key] = metadata
-			if(recurse && metadata.type == 'Object') 
-			{
-				config2 = {
-					sourceObject: value, sourceObjectName: key, recurse: true, handleCycles: handleCycles
-				}
+			return
+		}
+		var metadata = getJsObjectMetadata(value)
+		result[key] = metadata
 
-				_.extend(result[key], extractObjectMetadatas(config2))
-			}
-			else if(recurse && metadata.type=='Array' && value && value.length)
-			{
-				config2 = {
-					sourceObject: value[0], sourceObjectName: key, recurse: true, handleCycles: handleCycles
-				}
-				_.extend(result[key], {arrayItemMetadata: extractObjectMetadatas(config2)})
-			}
+		var config2 = {
+			sourceObjectName: key, 
+			recurse: config.recurse, 
+			handleCycles: config.handleCycles,
+			level: config.level + 1,
+			levelMax: config.levelMax
+		}
 
-		})(key2, value2)
-	}
-
+		if(config.recurse && metadata.type == 'Object') 
+		{
+			config2.sourceObject = value
+			_.extend(result[key], extractObjectMetadatas(config2))
+		}
+		else if(config.recurse && metadata.type=='Array' && value && value.length)
+		{
+			config2.sourceObject = value[0]
+			_.extend(result[key], {arrayItemMetadata: extractObjectMetadatas(config2)})
+		}
+	})
 	myMetadata.objectMetadata = result
 	return myMetadata
+}
+
+// @function iterateObjectProperties implementation used for visiting all object properties  (for var i in sourceObject)
+var iterateObjectProperties = function(sourceObject, fn)
+{
+	for(var key in sourceObject)
+	{
+		var value = sourceObject[key]
+
+		fn(key, value)
+	}
 }
 
 var excludeNames = function(absoluteName)

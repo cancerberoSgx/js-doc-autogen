@@ -21,21 +21,34 @@ describe('first ones', ()=>
 					sudo: {password: function(){}}
 				}
 			},
-			instance: new Class()
+			instance: new Class(),
+			a1: {a2: {a3: {a4: {a5: {a6: {a7: {a8: {shouldneverpass: function(){}}}}}}}}}
 			// self: require('fs')
 		}
 		var config = {
 			target: context,
 			outputImplementation: 'shortjsdoc',
-			excludeNames: ['first.anObject.sudo.password']	
+			excludeNames: ['first.anObject.sudo.password'],
+			levelMax:6
 		}
 		var buffer = docgen.main(config)
 		var s = buffer.join('\n')
+		
 		expect(s.indexOf('@class first.anObject')!==-1).toBe(true)
 		expect(s.indexOf('@method method1')!==-1).toBe(true)
+
+		//param name
 		expect(s.indexOf('@param averygoodparameter')!==-1).toBe(true)
+
+		//excludeNames
 		expect(s.indexOf('@method coolMethod')!==-1).toBe(true)
 		expect(s.indexOf('@method password')==-1).toBe(true)
+		expect(s.indexOf('@method coolMethod')!==-1).toBe(true)
+
+		//levelMax
+		expect(s.indexOf('@class a1.a2.a3.a4.a5.a6')!==-1).toBe(true)
+		expect(s.indexOf('@method shouldneverpass')==-1).toBe(true)
+
 		// console.log(s)
 	})
 

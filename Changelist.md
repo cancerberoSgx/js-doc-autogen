@@ -11,3 +11,5 @@
  * browserify and bundle.js
  * document jsdoc extraction in html
  * better object property iteration
+ * visitMaxCount config property (visit count limit)
+ * levelMax config property (stack/recursion limit)

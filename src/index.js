@@ -39,13 +39,15 @@ var main = function(config)
 			var metadata
 			// try
 			// {
-
 				var config2 = {
-					sourceObject: target, sourceObjectName: globalProperty, recurse: true, handleCycles: config.handleCycles
+					sourceObject: target, 
+					sourceObjectName: globalProperty, 
+					recurse: true, 
+					handleCycles: config.handleCycles
 				}
-	// 
-
-				metadata = extractObjectMetadatas(config2)
+				config3 = _.extend(_.clone(config), config2)
+			// console.log(config3)
+				metadata = extractObjectMetadatas(config3)
 			// }
 			// catch(ex)
 			// {
@@ -65,8 +67,6 @@ var main = function(config)
 			_.extend(config, generatorConfig)
 			// _.extend(generatorConfig, config)
 			generateOutput(config)
-
-			
 		}
 	})
 	

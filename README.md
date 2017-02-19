@@ -22,3 +22,30 @@ You will see a jsdoc fragment in the console.
 
  * [TODO](https://github.com/cancerberoSgx/js-doc-autogen/blob/master/TODO.md)
  * [Changelist](https://github.com/cancerberoSgx/js-doc-autogen/blob/master/Changelist.md)
+
+#using it in the browser to examine DOM
+
+    <script src="../dist/bundle.js"></script>
+    <script>
+    var docgen = require('js-doc-autogen')
+    var context = {
+        document: document,
+        window: window,
+        foo: {p: 9}
+    }
+    var config = {
+        target: context,
+        mainModule: 'html',
+        outputImplementation: 'shortjsdoc',
+        excludeNames: ['document.doctype']
+        // ,visitMaxCount: 1000
+        ,levelMax: 4
+    }
+    var buffer = docgen.main(config)
+    var jsdoc = buffer.join('\n')
+    var jsdoc = '/*\n'+jsdoc+'\n*/'
+    window.jsdoc = jsdoc
+    console.log(jsdoc)
+    // copy(s)
+    console.log('jsdoc available in variable jsdoc. Execute copy(jsdoc) in the console to copy jsdoc to clipboard. ')
+    </script>

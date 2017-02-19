@@ -10,10 +10,10 @@ Need to execute this command before:
 <html>
 <head>
 	<title>example in the browser</title>
-	<script src="../dist/bundle.js"></script>
 </head>
 <body>
 
+<script src="../dist/bundle.js"></script>
 <script>
 var docgen = require('js-doc-autogen')
 var context = {
@@ -26,8 +26,8 @@ var config = {
 	mainModule: 'html',
 	outputImplementation: 'shortjsdoc',
 	excludeNames: ['document.doctype']
-	,
-	visitMaxCount: 10000
+	// ,visitMaxCount: 1000
+	,levelMax: 4
 }
 var buffer = docgen.main(config)
 var jsdoc = buffer.join('\n')
