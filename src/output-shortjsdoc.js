@@ -6,7 +6,6 @@ var visitObjectMetadata = require('./metadata').visitObjectMetadata
 //@function generateOopAst - generate a class-ast like object very suitable for shortjsdoc - this method could be useful by it self by implenting output-shortjsdoc-ast
 var generateOopAst = function(metadata, bigName)
 {
-	var lastClass
 	var classes = {}
 	visitObjectMetadata(metadata, bigName, '', 0, function(md)
 	{
@@ -18,13 +17,13 @@ var generateOopAst = function(metadata, bigName)
 	visitObjectMetadata(metadata, bigName, '', 0, function(md)
 	{
 		var methodNameSplitted = md.absoluteName.split('.')
-		var methodName = methodNameSplitted.pop()
+		methodNameSplitted.pop()
 		var className = methodNameSplitted.join('.')
 		if(!className || !classes[className])
 		{
 			return
 		}
-	 	if(md.type == 'Function')
+		if(md.type == 'Function')
 		{
 			classes[className].methods = classes[className].methods || []
 			classes[className].methods.push(md)

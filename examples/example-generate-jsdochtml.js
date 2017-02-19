@@ -20,7 +20,7 @@ var context = {
 var config = {
 	target: context,
 	outputImplementation: 'shortjsdoc',
-	excludeNames: ['sudo.password']	
+	excludeNames: ['sudo.password']
 }
 var buffer = docgen.main(config)
 var s = '/*\n'+buffer.join('\n')+'\n*/'
@@ -31,10 +31,10 @@ fs.writeFileSync(file, s)
 
 shell.rm('-rf', 'tmp/output-jsdocs')
 
-var config = {
+var config2 = {
 	input: [file],
 	output: 'test_tmp_output',
 	projectMetadata: {},
 	vendor: []
 }
-ShortJsDoc.make(config)
+ShortJsDoc.make(config2)

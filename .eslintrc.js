@@ -25,6 +25,8 @@ module.exports = {
     },
     "globals": {
         "globalThis": true,
-        "excludeNames_": true
+        "excludeNames_": true,
+        "_visitMaxCount": true,
+        _visitCount: true
     }
 }

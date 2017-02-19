@@ -6,8 +6,12 @@ var path = require('path')
 // var global = this
 describe('first ones', ()=>
 {
+
 	it('output-short-jsdoc', ()=>
 	{
+		var Class = function(){}
+		_.extend(Class.prototype,{coolMethod: function(){}})
+
 		var context = {
 			first: {
 				hello: 'world', fn: function(){}, 
@@ -17,6 +21,7 @@ describe('first ones', ()=>
 					sudo: {password: function(){}}
 				}
 			},
+			instance: new Class()
 			// self: require('fs')
 		}
 		var config = {
@@ -29,10 +34,10 @@ describe('first ones', ()=>
 		expect(s.indexOf('@class first.anObject')!==-1).toBe(true)
 		expect(s.indexOf('@method method1')!==-1).toBe(true)
 		expect(s.indexOf('@param averygoodparameter')!==-1).toBe(true)
+		expect(s.indexOf('@method coolMethod')!==-1).toBe(true)
 		// expect(s.indexOf('@function globalFn')!==-1).toBe(true)
 		// console.log(s)
 	})
-
 
 	it('output-short-jsdoc-ast', ()=>
 	{

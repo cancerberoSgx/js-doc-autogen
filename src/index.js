@@ -18,6 +18,8 @@ var main = function(config)
 	globalThis = config.targetObjects
 
 	excludeNames_ = config.excludeNames
+	_visitMaxCount = config.visitMaxCount || 0
+	_visitCount = 0
 
 	var buffer = []
 
@@ -47,7 +49,7 @@ var main = function(config)
 				// 	'\nPlease give us an object with no cycles!')
 			// 	throw ex
 			// }
-			var module = mainModule+'.'+globalProperty
+			var module = mainModule//+'.'+globalProperty
 
 			var generatorConfig = {
 				metadata: metadata,
@@ -65,7 +67,6 @@ var main = function(config)
 	
 	return buffer
 }
-
 
 module.exports = {
 	main: main

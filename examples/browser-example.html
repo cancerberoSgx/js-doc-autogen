@@ -1,0 +1,37 @@
+<!--
+
+Need to execute this command before: 
+
+	browserify -r .:js-doc-autogen -r ./src/output-shortjsdoc.js:./output-shortjsdoc > dist/bundle.js
+
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>example in the browser</title>
+	<script src="../dist/bundle.js"></script>
+</head>
+<body>
+
+<script>
+var docgen = require('js-doc-autogen')
+var context = {
+	document: document,
+	window: window
+}
+var config = {
+	target: context,
+	outputImplementation: 'shortjsdoc',
+	excludeNames: ['sudo.password'],
+	visitMaxCount: 10
+}
+var buffer = docgen.main(config)
+jsdoc = buffer.join('\n')
+jsdoc = '/*\n'+jsdoc+'\n*/'
+// console.log(jsdoc)
+// copy(s)
+console.log('jsdoc available in variable jsdoc. Execute copy(jsdoc) in the console to copy jsdoc to clipboard. ')
+</script>
+</body>
+</html>

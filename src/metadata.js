@@ -62,7 +62,7 @@ function extractMethodSignature(s)
 	catch(ex)
 	{
 		//parsing fail - sometimes could be native code ? 
-		return undefined
+		return {}
 	}
 	return val
 }
@@ -70,6 +70,11 @@ function extractMethodSignature(s)
 var veryStrangePropertyNameForCycles = '___should_neverneverhappen12322'
 var extractObjectMetadatas = function(sourceObject, sourceObjectName, recurse, handleCycles)
 {
+	_visitCount++
+	if(_visitMaxCount && _visitCount > _visitMaxCount)
+	{
+		return
+	}
 	var result = {}
 	var myMetadata = getJsObjectMetadata(sourceObject)
 	if(handleCycles)
@@ -83,23 +88,53 @@ var extractObjectMetadatas = function(sourceObject, sourceObjectName, recurse, h
 			sourceObject[veryStrangePropertyNameForCycles]=sourceObjectName
 		}
 	}
-	_.each(sourceObject, function(value, key)
+
+	//heads up ! using _.each for iterating object properties won't visit inherited properties. Concretely, browser's document
+
+	// _.each(sourceObject, function(value, key)
+	// {
+	// 	if(handleCycles && key == veryStrangePropertyNameForCycles)
+	// 	{
+	// 		return
+	// 	}
+	// 	// console.log(key)
+	// 	var metadata = getJsObjectMetadata(value)
+	// 	result[key] = metadata
+	// 	if(recurse && metadata.type == 'Object') 
+	// 	{
+	// 		_.extend(result[key], extractObjectMetadatas(value, key, true, handleCycles))
+	// 	}
+	// 	else if(recurse && metadata.type=='Array' && value && value.length)
+	// 	{
+	// 		_.extend(result[key], {arrayItemMetadata: extractObjectMetadatas(value[0], key, true, handleCycles)})
+	// 	}
+	// })
+
+	for(var key2 in sourceObject)
 	{
-		if(handleCycles && key == veryStrangePropertyNameForCycles)
+		var value2 = sourceObject[key2];
+
+		(function(key, value)
 		{
-			return
-		}
-		var metadata = getJsObjectMetadata(value)
-		result[key] = metadata
-		if(recurse && metadata.type == 'Object') 
-		{
-			_.extend(result[key], extractObjectMetadatas(value, key, true, handleCycles))
-		}
-		else if(recurse && metadata.type=='Array' && value && value.length)
-		{
-			_.extend(result[key], {arrayItemMetadata: extractObjectMetadatas(value[0], key, true, handleCycles)})
-		}
-	})
+			if(handleCycles && key == veryStrangePropertyNameForCycles)
+			{
+				return
+			}
+			// console.log(key)
+			var metadata = getJsObjectMetadata(value)
+			result[key] = metadata
+			if(recurse && metadata.type == 'Object') 
+			{
+				_.extend(result[key], extractObjectMetadatas(value, key, true, handleCycles))
+			}
+			else if(recurse && metadata.type=='Array' && value && value.length)
+			{
+				_.extend(result[key], {arrayItemMetadata: extractObjectMetadatas(value[0], key, true, handleCycles)})
+			}
+
+		})(key2, value2)
+	}
+
 	myMetadata.objectMetadata = result
 	return myMetadata
 }

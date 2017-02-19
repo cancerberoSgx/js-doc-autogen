@@ -10,10 +10,15 @@ Requirement: output is pluggable - now we have shortjsdoc impl but it couold als
 
 Requirement: it can run anywhere thanks to browserify: we can run it in node, browser, rhino, etc
 
-#TODO
+#generate bundle and run it in browser
 
-(TODO)[https://github.com/cancerberoSgx/js-doc-autogen/blob/master/TODO.md]
+    browserify -r .:js-doc-autogen -r ./src/output-shortjsdoc.js:./output-shortjsdoc -r underscore -d > dist/bundle.js
+    
+    firefox example/browser-example.html
 
-#Changelist
+You will see a jsdoc fragment in the console. 
 
-(TODO)[https://github.com/cancerberoSgx/js-doc-autogen/blob/master/Changelist.md]
+#Other files
+
+ * [TODO](https://github.com/cancerberoSgx/js-doc-autogen/blob/master/TODO.md)
+ * [Changelist](https://github.com/cancerberoSgx/js-doc-autogen/blob/master/Changelist.md)
