@@ -27,11 +27,9 @@ var generateOopAst = function(metadata, bigName)
 		{
 			classes[className].methods = classes[className].methods || []
 			classes[className].methods.push(md)
-			// extractMethodSignature(md)
 		}
 		else if(md.type !== 'Object')
 		{
-			// console.log(className)
 			classes[className].properties = classes[className].properties || []
 			classes[className].properties.push(md)
 		}
@@ -47,17 +45,8 @@ var generateJsDoc = function(config)
 	var bigName = config.bigName
 	var moduleName = config.module
 	var buffer = config.buffer
-	// if(_.isFunction(metadata))
-	// {
-	// 	buffer.push('@module '+mainModule)
-	// 	buffer.push('@function '+globalProperty)
-	// 	// var metadata = extractObjectMetadatas(metadata, 'LoginRegister', true)
-	// 	// console.log('global function ', globalProperty )
-	// // 	//TODO
-	// }
 
-	// else 
-	if(_.isObject(metadata))
+	if(_.isObject(metadata)) //heads up ! we are not visiting first level - non object values !
 	{
 		var classes = generateOopAst(metadata, bigName)
 		buffer.push('@module '+moduleName)

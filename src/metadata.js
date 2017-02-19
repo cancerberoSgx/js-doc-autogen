@@ -68,8 +68,15 @@ function extractMethodSignature(s)
 }
 
 var veryStrangePropertyNameForCycles = '___should_neverneverhappen12322'
-var extractObjectMetadatas = function(sourceObject, sourceObjectName, recurse, handleCycles)
+var extractObjectMetadatas = function(config)
 {
+
+	var sourceObject = config.sourceObject, 
+		sourceObjectName = config.sourceObjectName, 
+		recurse = config.recurse, 
+		handleCycles = config.handleCycles
+
+
 	_visitCount++
 	if(_visitMaxCount && _visitCount > _visitMaxCount)
 	{
@@ -110,9 +117,11 @@ var extractObjectMetadatas = function(sourceObject, sourceObjectName, recurse, h
 	// 	}
 	// })
 
+	var config2
+
 	for(var key2 in sourceObject)
 	{
-		var value2 = sourceObject[key2];
+		var value2 = sourceObject[key2]; //heads up - semicolon mandatory here !! 
 
 		(function(key, value)
 		{
@@ -125,11 +134,18 @@ var extractObjectMetadatas = function(sourceObject, sourceObjectName, recurse, h
 			result[key] = metadata
 			if(recurse && metadata.type == 'Object') 
 			{
-				_.extend(result[key], extractObjectMetadatas(value, key, true, handleCycles))
+				config2 = {
+					sourceObject: value, sourceObjectName: key, recurse: true, handleCycles: handleCycles
+				}
+
+				_.extend(result[key], extractObjectMetadatas(config2))
 			}
 			else if(recurse && metadata.type=='Array' && value && value.length)
 			{
-				_.extend(result[key], {arrayItemMetadata: extractObjectMetadatas(value[0], key, true, handleCycles)})
+				config2 = {
+					sourceObject: value[0], sourceObjectName: key, recurse: true, handleCycles: handleCycles
+				}
+				_.extend(result[key], {arrayItemMetadata: extractObjectMetadatas(config2)})
 			}
 
 		})(key2, value2)

@@ -27,7 +27,7 @@ describe('first ones', ()=>
 		var config = {
 			target: context,
 			outputImplementation: 'shortjsdoc',
-			excludeNames: ['sudo.password']	
+			excludeNames: ['first.anObject.sudo.password']	
 		}
 		var buffer = docgen.main(config)
 		var s = buffer.join('\n')
@@ -35,7 +35,7 @@ describe('first ones', ()=>
 		expect(s.indexOf('@method method1')!==-1).toBe(true)
 		expect(s.indexOf('@param averygoodparameter')!==-1).toBe(true)
 		expect(s.indexOf('@method coolMethod')!==-1).toBe(true)
-		// expect(s.indexOf('@function globalFn')!==-1).toBe(true)
+		expect(s.indexOf('@method password')==-1).toBe(true)
 		// console.log(s)
 	})
 
@@ -183,7 +183,7 @@ describe('first ones', ()=>
 		}
 		expect(error).toBe(true)
 		// var ast = config.astOutput
-		// console.log(ast)
+		// console.log(JSON.stringify(ast))
 	})
 
 	it('if cycles and handleCycles wont fail', ()=>

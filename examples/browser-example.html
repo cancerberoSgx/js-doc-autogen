@@ -18,18 +18,22 @@ Need to execute this command before:
 var docgen = require('js-doc-autogen')
 var context = {
 	document: document,
-	window: window
+	window: window,
+	foo: {p: 9}
 }
 var config = {
 	target: context,
+	mainModule: 'html',
 	outputImplementation: 'shortjsdoc',
-	excludeNames: ['sudo.password'],
-	visitMaxCount: 10
+	excludeNames: ['document.doctype']
+	,
+	visitMaxCount: 10000
 }
 var buffer = docgen.main(config)
-jsdoc = buffer.join('\n')
-jsdoc = '/*\n'+jsdoc+'\n*/'
-// console.log(jsdoc)
+var jsdoc = buffer.join('\n')
+var jsdoc = '/*\n'+jsdoc+'\n*/'
+window.jsdoc = jsdoc
+console.log(jsdoc)
 // copy(s)
 console.log('jsdoc available in variable jsdoc. Execute copy(jsdoc) in the console to copy jsdoc to clipboard. ')
 </script>

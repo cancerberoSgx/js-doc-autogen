@@ -1,6 +1,8 @@
 
 #TODO
 
+ * property types 
+
  * output in typescript definitions
  * option for also extracting Function prototypes - and treat functions not like methods but like classes ? 
  * 

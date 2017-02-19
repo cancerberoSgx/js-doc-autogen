@@ -36,11 +36,16 @@ var main = function(config)
 
 			var target = globalContext[globalProperty]
 
-			// console.log(globalProperty)	
 			var metadata
 			// try
 			// {
-				metadata = extractObjectMetadatas(target, globalProperty, true, config.handleCycles)
+
+				var config2 = {
+					sourceObject: target, sourceObjectName: globalProperty, recurse: true, handleCycles: config.handleCycles
+				}
+	// 
+
+				metadata = extractObjectMetadatas(config2)
 			// }
 			// catch(ex)
 			// {

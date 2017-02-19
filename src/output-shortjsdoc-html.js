@@ -9,8 +9,7 @@ module.exports = {
 	{
 		var config2 = {
 			target: config.target,
-			outputImplementation: 'shortjsdoc',
-			excludeNames: ['sudo.password']	
+			outputImplementation: 'shortjsdoc'
 		}
 		var buffer = docgen.main(config2)
 		var s = '/*\n'+buffer.join('\n')+'\n*/'
