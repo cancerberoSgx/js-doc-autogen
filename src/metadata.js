@@ -56,7 +56,7 @@ function extractMethodSignature(s)
 		var ast = esprima.parse('var a = '+s)
 		var params = ast.body[0].declarations[0].init.params
 		val = {
-			params: _.map(params, (p)=>{return p.name})
+			params: _.map(params, function(p){return p.name})
 		}
 	}
 	catch(ex)
@@ -102,7 +102,7 @@ var extractObjectMetadatas = function(config)
 
 	//heads up ! using _.each for iterating object properties won't visit inherited properties. Concretely, browser's document
 	
-	iterateObjectProperties(sourceObject, function(key, value)
+	getObjectPropertiesIterator()(sourceObject, function(key, value)
 	{
 		if(config.handleCycles && key == veryStrangePropertyNameForCycles)
 		{
@@ -137,10 +137,10 @@ var extractObjectMetadatas = function(config)
 // @function iterateObjectProperties implementation used for visiting all object properties  (for var i in sourceObject)
 var iterateObjectProperties = function(sourceObject, fn)
 {
+	// console.log('here12122')
 	for(var key in sourceObject)
 	{
 		var value = sourceObject[key]
-
 		fn(key, value)
 	}
 }
@@ -171,10 +171,15 @@ var visitObjectMetadata = function(metadata, name, parentName, level, visitor)
 	})
 }
 
-
+var _objectPropertiesIterator = iterateObjectProperties
+var getObjectPropertiesIterator = function(){return _objectPropertiesIterator}
+var setObjectPropertiesIterator = function(iterator){_objectPropertiesIterator = iterator}
 
 module.exports = {
 	visitObjectMetadata: visitObjectMetadata,
 	extractObjectMetadatas: extractObjectMetadatas,
-	veryStrangePropertyNameForCycles: veryStrangePropertyNameForCycles
+	veryStrangePropertyNameForCycles: veryStrangePropertyNameForCycles,
+	iterateObjectProperties: iterateObjectProperties,
+	getObjectPropertiesIterator: getObjectPropertiesIterator,
+	setObjectPropertiesIterator: setObjectPropertiesIterator
 }

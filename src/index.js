@@ -1,6 +1,9 @@
 var _ = require('underscore')
 
-var extractObjectMetadatas = require('./metadata').extractObjectMetadatas
+require('./output-shortjsdoc')
+
+var metadataModule = require('./metadata')
+var extractObjectMetadatas = metadataModule.extractObjectMetadatas
 
 var main = function(config)
 {
@@ -13,8 +16,6 @@ var main = function(config)
 	}
 	var generateOutput = require('./output-'+outputImplementation).generate
 
-	// var excludeGlobals = ['requestHandler', 'eventHandler', 'process']
-
 	globalThis = config.targetObjects
 
 	excludeNames_ = config.excludeNames
@@ -25,16 +26,16 @@ var main = function(config)
 
 	config.target = _.isArray(config.target) ? config.target : [config.target]
 
+	var iterateObjectProperties = metadataModule.getObjectPropertiesIterator()
+
 	_.each(config.target, function(globalContext)
 	{
-		for(var globalProperty in globalContext)
+		iterateObjectProperties(globalContext, function(globalProperty, target)
 		{
 			if(_.contains(config.excludeGlobals, globalProperty))
 			{
-				continue
+				return
 			}
-
-			var target = globalContext[globalProperty]
 
 			var metadata
 			// try
@@ -45,9 +46,9 @@ var main = function(config)
 					recurse: true, 
 					handleCycles: config.handleCycles
 				}
-				config3 = _.extend(_.clone(config), config2)
+				var config3 = _.extend(_.clone(config), config2)
 			// console.log(config3)
-				metadata = extractObjectMetadatas(config3)
+				metadata = extractObjectMetadatas(config3)	
 			// }
 			// catch(ex)
 			// {
@@ -56,23 +57,22 @@ var main = function(config)
 				// 	'\nPlease give us an object with no cycles!')
 			// 	throw ex
 			// }
-			var module = mainModule//+'.'+globalProperty
 
 			var generatorConfig = {
 				metadata: metadata,
 				bigName: globalProperty,
-				module: module,
+				module: mainModule,
 				buffer: buffer
 			}
 			_.extend(config, generatorConfig)
-			// _.extend(generatorConfig, config)
 			generateOutput(config)
-		}
+		})
 	})
 	
 	return buffer
 }
 
 module.exports = {
-	main: main
+	main: main,
+	setObjectPropertiesIterator: metadataModule.setObjectPropertiesIterator
 }

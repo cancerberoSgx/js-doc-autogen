@@ -31,7 +31,7 @@ var config = {
 }
 var buffer = docgen.main(config)
 var jsdoc = buffer.join('\n')
-var jsdoc = '/*\n'+jsdoc+'\n*/'
+jsdoc = '/*\n'+jsdoc+'\n*/'
 window.jsdoc = jsdoc
 console.log(jsdoc)
 // copy(s)

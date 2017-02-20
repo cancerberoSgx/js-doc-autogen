@@ -50,18 +50,18 @@ var generateJsDoc = function(config)
 	{
 		var classes = generateOopAst(metadata, bigName)
 		buffer.push('@module '+moduleName)
-		_.each(classes, (c)=>
+		_.each(classes, function(c)
 		{
 			buffer.push('@class '+c.absoluteName)
-			_.each(c.properties, (m)=>
+			_.each(c.properties, function(p)
 			{
-				buffer.push('@property ' + m.name)
+				buffer.push('@property ' + p.name)
 			})
-			_.each(c.methods, (m)=>
+			_.each(c.methods, function(m)
 			{
 				buffer.push('@method ' + m.name)
 				// console.log(m)
-				_.each(m.signature.params, (p)=>
+				_.each(m.signature.params, function(p)
 				{
 					buffer.push('@param ' + p)
 				})

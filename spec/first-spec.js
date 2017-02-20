@@ -188,7 +188,9 @@ describe('first ones', ()=>
 		var error
 		try
 		{
+		// console.log('s0', config.astOutput)
 			docgen.main(config)
+		// console.log('s1', config.astOutput)
 		}
 		catch(ex)
 		{
@@ -222,7 +224,6 @@ describe('first ones', ()=>
 		// console.log(s)
 
 		expect(ast.properties.o1.objectMetadata.cycle1.objectMetadata.o1.type).toBe('Object')
-	
 
 		expect(ast.properties.o1.objectMetadata.cycle1.objectMetadata.o1.type).toBe('Object')
 	})

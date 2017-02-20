@@ -27,7 +27,7 @@ var doJsonSchemaObject = function(metadata, schemaNode, level)
 	if(metadata.type=='Object')
 	{
 		schemaNode.type = 'object'
-		_.each(metadata.objectMetadata, (p, pname)=>
+		_.each(metadata.objectMetadata, function(p, pname)
 		{
 			var jsprop = {}
 			doJsonSchemaObject(p, jsprop, level+1)
