@@ -2,6 +2,7 @@
 #TODO
 
  * property types 
+ * spec of docgen.metadata.setObjectPropertiesIterator
 
  * output in typescript definitions
  * option for also extracting Function prototypes - and treat functions not like methods but like classes ? 

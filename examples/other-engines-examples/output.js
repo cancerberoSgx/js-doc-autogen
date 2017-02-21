@@ -1,4 +1,4 @@
-if(typeof global==='undefined'){this.global=this;global=this}if(typeof window==='undefined'){window=this}var tool={isJJS:function(){return typeof Java==='object'},isns:function(){return typeof nlapiLoadRecord!=='undefined'},isNode:function(){return typeof console!=='undefined'},isRhino:function(){return typeof java!=='undefined'},isBrowser:function(){return false},isV7:function(){return typeof print!=='undefined'},environment:function(){var env;if(tool.isns()){env='ns'}else if(tool.isBrowser()){env='browser'}else if(tool.isV7()){env='v7'}else if(tool.isJJS()){env='jjs'}else if(tool.isRhino()){env='rhino'}else if(tool.isNode()){env='node'}return env}};engifyTool=tool;console={log:function(){var env=tool.environment();if(env==='ns'){nlapiLogExecution('DEBUG','jslog',Array.prototype.slice.call(arguments).join(', '))}else if(env==='jjs'){var System=Java.type('java.lang.System');System.out.println(Array.prototype.slice.call(arguments).join(', '))}else if(env==='rhino'){java.lang.System.out.println(Array.prototype.slice.call(arguments).join(', '))}else if(env==='node'){console.log.apply(console,arguments)}else if(env==='browser'){console.log.apply(console,arguments)}else if(env==='v7'){print.apply(this,arguments)}}};console.error=console.log; 
+this._GLOBAL=this;_GLOBAL=this;if(typeof global==='undefined'){this.global=this;global=this}if(typeof window==='undefined'){window=this}var tool={isJJS:function(){return typeof Java==='object'},isns:function(){return typeof nlapiLoadRecord!=='undefined'},isNode:function(){return typeof console!=='undefined'},isRhino:function(){return typeof java!=='undefined'},isBrowser:function(){return false},isV7:function(){return typeof print!=='undefined'},environment:function(){var env;if(tool.isns()){env='ns'}else if(tool.isBrowser()){env='browser'}else if(tool.isV7()){env='v7'}else if(tool.isJJS()){env='jjs'}else if(tool.isRhino()){env='rhino'}else if(tool.isNode()){env='node'}return env}};engifyTool=tool;console={log:function(){var env=tool.environment();if(env==='ns'){nlapiLogExecution('DEBUG','jslog',Array.prototype.slice.call(arguments).join(', '))}else if(env==='jjs'){var System=Java.type('java.lang.System');System.out.println(Array.prototype.slice.call(arguments).join(', '))}else if(env==='rhino'){java.lang.System.out.println(Array.prototype.slice.call(arguments).join(', '))}else if(env==='node'){console.log.apply(console,arguments)}else if(env==='browser'){console.log.apply(console,arguments)}else if(env==='v7'){print.apply(this,arguments)}}};console.error=console.log; 
 
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 //     Underscore.js 1.8.3
@@ -1551,15 +1551,53 @@ if(typeof global==='undefined'){this.global=this;global=this}if(typeof window===
 }.call(this));
 
 },{}],2:[function(require,module,exports){
+/*
+#HOW TO RUN
+
+	browserify -t engify src/ > output.js; rhino output.js
+*/
+
 var docgen = require('../../..')
 // require('../../../src/output-shortjsdoc')
 
 var _ = require('underscore')
-console.log(JSON.stringify(_.keys(java)))
+// console.log(JSON.stringify(_.keys(java)))
 
+
+var myGlobal = {}
+
+//heads up - for some reason we have to exclude the global 'Script'
+var keys = [
+	'Function', 'Object', 'Error', 'CallSite', 'decodeURI', 'decodeURIComponent', 'encodeURI',
+
+	'encodeURIComponent', 'escape', 'eval', 'isFinite', 'isNaN', 'isXMLName', 'parseFloat', 'parseInt', 'unescape', 
+	'uneval', 'NaN', 'Infinity', 'undefined', 'EvalError', 'RangeError', 'ReferenceError', 'SyntaxError', 'TypeError', 
+	'URIError', 'InternalError', 'JavaException', 'Array', 'String', 'Boolean', 'Number', 'Date', 'Math', 'JSON', 'With', 
+	'Call', 
+	'Script', 
+	'Iterator', 'StopIteration', 'RegExp', 
+	'Continuation', 'XML', 'XMLList', 'Namespace', 'QName', 
+	'ArrayBuffer', 'Int8Array', 'Uint8Array', 'Uint8ClampedArray', 'Int16Array', 'Uint16Array', 'Int32Array', 'Uint32Array', 
+	'Float32Array', 'Float64Array', 'DataView', 'Packages', 'getClass', 'JavaAdapter', 'JavaImporter', 'java', 'javax', 
+	'org', 'com', 'edu', 'net', 
+	'global', 
+	'defineClass', 'deserialize', 'doctest', 'gc', 'help', 'load', 'loadClass', 
+	'print', 'quit', 'readline', 'readFile', 'readUrl', 'runCommand', 'seal', 'serialize', 'spawn', 'sync', 'toint32', 
+	'version', 'write', 'Environment', 'environment', 'history', 'arguments', 'tool',
+	 // '_GLOBAL', 'window', 'engifyTool', 
+	// 'console', 'globalThis', 'excludeNames_', '_visitMaxCount', '_visitCount', 
+
+	'importClass', 'importPackage'
+]
+_.each(keys, function(k){myGlobal[k]=_GLOBAL[k]})
+
+// _.each(_.without(_.keys(_GLOBAL), 'Script'), function(k){myGlobal[k]=_GLOBAL[k]})
 var context = {
-	foo: {p: 9},
-	java: java
+	// foo: {p: 9},
+	// java: java
+	// ,
+	// rhino: _GLOBAL
+	rhino: myGlobal
 }
 
 var config = {
@@ -1571,28 +1609,101 @@ var config = {
 	// ,levelMax: 4
 }
 
-docgen.setObjectPropertiesIterator(function(object, fn)
-{
-	// console.log('here12122')
 
-	// console.log('here? '+ _.keys(object).join(','))
-	// var arr = ['a','b']
-	// _.each( arr, function(key) 
-	// {
-	// 	var value = 2//object[key]
-	// 	fn(key, value)
-	// })
-	_.each( _.keys(object), function(key) 
+var rhinoObjectPropertyIterator = function(object, fn)
+{
+	var keys = Object.getOwnPropertyNames(object)
+	// console.log(keys.join('", "'))
+	_.each(keys, function(key) 
 	{
 		var value = object[key]
 		fn(key, value)
 	})
-})
+}
 
-var buffer = docgen.main(config)
-var jsdoc = buffer.join('\n')
+
+docgen.metadata.setObjectPropertiesIterator(rhinoObjectPropertyIterator)
+
+docgen.main(config)
+var jsdoc = config.buffer.join('\n')
 jsdoc = '/*\n'+jsdoc+'\n*/'
 console.log(jsdoc)
+
+
+// console.log(Object.getOwnPropertyNames(_GLOBAL).join(', ')+'0000')
+
+
+
+
+// console.log(typeof(java.lang), typeof(java.lang.String))//JSON.stringify(docgen.metadata.getJsObjectMetadata(java.lang.String)))
+
+// console.log(
+// docgen.metadata.getJsObjectMetadata(java.lang.String).type
+// + ' - ' + 
+// docgen.metadata.getJsObjectMetadata(java.lang).type
+// )
+
+
+// var config2 = _.extend(_.clone(config), {outputImplementation: 'ast'})
+// docgen.main(config2)
+// var ast = config2.astOutput
+// console.log(JSON.stringify(ast, 0, 2))
+
+// var o = java.lang.String
+// console.log(_.map(_.keys(o), function(k){return k + ' - ' + typeof(o[k])}).join(', '))
+
+
+
+// var keysWithCustomIterator = function(object)
+// {
+// 	var keys = []
+// 	rhinoObjectPropertyIterator(object, function(key)
+// 	{
+// 		keys.push(key)
+// 	})
+// 	return keys
+// }
+
+// console.log(JSON.stringify(keysWithCustomIterator(java.lang)))
+
+ // console.log(JSON.stringify(_.keys(java.lang)))
+
+
+
+ // var rhinoObjectPropertyIterator = function(object, fn)
+// {
+// 	var keys
+
+// 	try
+// 	{
+// 		keys = Object.getOwnPropertyNames(object)  //  _.keys(object)
+// 	}
+// 	catch(ex)
+// 	{
+// 		console.log('Error extracting keys')
+// 	}
+// 	// console.log((keys||[]).join(', '))
+// 	_.each(keys, function(key) 
+// 	{
+// 		var value
+// 		try
+// 		{
+// 			value = object[key]
+// 		}
+// 		catch(ex)
+// 		{
+// 			console.log('Error accessing value')
+// 		}
+// 		try
+// 		{
+// 			fn(key, value)
+// 		}
+// 		catch(ex)
+// 		{
+// 			console.log('Error calling callback: '+ex)
+// 		}
+// 	})
+// }
 },{"../../..":5,"underscore":1}],3:[function(require,module,exports){
 (function webpackUniversalModuleDefinition(root, factory) {
 /* istanbul ignore next */
@@ -8000,7 +8111,11 @@ arguments[4][1][0].apply(exports,arguments)
 },{"dup":1}],5:[function(require,module,exports){
 var _ = require('underscore')
 
+
+//heads up ! we are making sure we require all implementations so browserify bundle won't fail when running bundle in other engines
 require('./output-shortjsdoc')
+require('./output-ast')
+
 
 var metadataModule = require('./metadata')
 var extractObjectMetadatas = metadataModule.extractObjectMetadatas
@@ -8040,15 +8155,15 @@ var main = function(config)
 			var metadata
 			// try
 			// {
-				var config2 = {
-					sourceObject: target, 
-					sourceObjectName: globalProperty, 
-					recurse: true, 
-					handleCycles: config.handleCycles
-				}
+			var config2 = {
+				sourceObject: target, 
+				sourceObjectName: globalProperty, 
+				recurse: true, 
+				handleCycles: config.handleCycles
+			}
 				var config3 = _.extend(_.clone(config), config2)
 			// console.log(config3)
-				metadata = extractObjectMetadatas(config3)	
+			metadata = extractObjectMetadatas(config3)	
 			// }
 			// catch(ex)
 			// {
@@ -8074,9 +8189,11 @@ var main = function(config)
 
 module.exports = {
 	main: main,
-	setObjectPropertiesIterator: metadataModule.setObjectPropertiesIterator
+	metadata: metadataModule
+	// ,
+	// setObjectPropertiesIterator: metadataModule.setObjectPropertiesIterator
 }
-},{"./metadata":6,"./output-shortjsdoc":7,"underscore":4}],6:[function(require,module,exports){
+},{"./metadata":6,"./output-ast":7,"./output-shortjsdoc":8,"underscore":4}],6:[function(require,module,exports){
 var _ = require('underscore')
 
 // metadata - TODO: move to metadata.js
@@ -8198,6 +8315,7 @@ var extractObjectMetadatas = function(config)
 			levelMax: config.levelMax
 		}
 
+		// console.log('getObjectPropertiesIterator key '+key + ' - ' + metadata.type)
 		if(config.recurse && metadata.type == 'Object') 
 		{
 			config2.sourceObject = value
@@ -8256,6 +8374,7 @@ var setObjectPropertiesIterator = function(iterator){_objectPropertiesIterator =
 
 module.exports = {
 	visitObjectMetadata: visitObjectMetadata,
+	getJsObjectMetadata: getJsObjectMetadata,
 	extractObjectMetadatas: extractObjectMetadatas,
 	veryStrangePropertyNameForCycles: veryStrangePropertyNameForCycles,
 	iterateObjectProperties: iterateObjectProperties,
@@ -8263,6 +8382,30 @@ module.exports = {
 	setObjectPropertiesIterator: setObjectPropertiesIterator
 }
 },{"esprima":3,"underscore":4}],7:[function(require,module,exports){
+//output plugin for jsdoc
+var _ = require('underscore')
+
+var generateJsDoc = function(config)
+{
+	var metadata = config.metadata
+	config.astOutput = config.astOutput || {properties: {}}
+	if(_.isObject(metadata))
+	{
+		var data = {}
+		data[config.bigName] = metadata
+		_.extend(config.astOutput.properties, data)
+	}
+}
+
+
+module.exports = {
+	generate: generateJsDoc
+}
+
+
+
+
+},{"underscore":4}],8:[function(require,module,exports){
 //output plugin for jsdoc
 var _ = require('underscore')
 

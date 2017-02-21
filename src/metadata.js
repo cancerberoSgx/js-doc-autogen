@@ -119,6 +119,7 @@ var extractObjectMetadatas = function(config)
 			levelMax: config.levelMax
 		}
 
+		// console.log('getObjectPropertiesIterator key '+key + ' - ' + metadata.type)
 		if(config.recurse && metadata.type == 'Object') 
 		{
 			config2.sourceObject = value
@@ -177,6 +178,7 @@ var setObjectPropertiesIterator = function(iterator){_objectPropertiesIterator =
 
 module.exports = {
 	visitObjectMetadata: visitObjectMetadata,
+	getJsObjectMetadata: getJsObjectMetadata,
 	extractObjectMetadatas: extractObjectMetadatas,
 	veryStrangePropertyNameForCycles: veryStrangePropertyNameForCycles,
 	iterateObjectProperties: iterateObjectProperties,

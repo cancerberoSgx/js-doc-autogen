@@ -1,6 +1,10 @@
 var _ = require('underscore')
 
+
+//heads up ! we are making sure we require all implementations so browserify bundle won't fail when running bundle in other engines
 require('./output-shortjsdoc')
+require('./output-ast')
+
 
 var metadataModule = require('./metadata')
 var extractObjectMetadatas = metadataModule.extractObjectMetadatas
@@ -40,15 +44,15 @@ var main = function(config)
 			var metadata
 			// try
 			// {
-				var config2 = {
-					sourceObject: target, 
-					sourceObjectName: globalProperty, 
-					recurse: true, 
-					handleCycles: config.handleCycles
-				}
+			var config2 = {
+				sourceObject: target, 
+				sourceObjectName: globalProperty, 
+				recurse: true, 
+				handleCycles: config.handleCycles
+			}
 				var config3 = _.extend(_.clone(config), config2)
 			// console.log(config3)
-				metadata = extractObjectMetadatas(config3)	
+			metadata = extractObjectMetadatas(config3)	
 			// }
 			// catch(ex)
 			// {
@@ -74,5 +78,7 @@ var main = function(config)
 
 module.exports = {
 	main: main,
-	setObjectPropertiesIterator: metadataModule.setObjectPropertiesIterator
+	metadata: metadataModule
+	// ,
+	// setObjectPropertiesIterator: metadataModule.setObjectPropertiesIterator
 }
