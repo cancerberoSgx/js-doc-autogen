@@ -1,5 +1,11 @@
 [![Build Status](https://travis-ci.org/cancerberoSgx/short-jsdoc.png?branch=master)](https://travis-ci.org/cancerberoSgx/js-doc-autogen)
 
+#jsdoc output example
+
+The following is documentation automatically generated from globals of different js implementations like node, browser, rhino, nashorn, etc
+
+[DEMO](https://cancerberosgx.github.io/js-doc-autogen/examples/other-engines-examples/jsdoc-output/)
+
 #automatic object discovery and documentation
 
 * This is a Research project *
