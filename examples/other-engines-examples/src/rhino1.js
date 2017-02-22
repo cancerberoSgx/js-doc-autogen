@@ -38,8 +38,6 @@ var rhinoObjectPropertyIterator = function(object, fn)
 		fn(key, value)
 	})
 }
-
-
 docgen.metadata.setObjectPropertiesIterator(rhinoObjectPropertyIterator)
 
 docgen.main(config)

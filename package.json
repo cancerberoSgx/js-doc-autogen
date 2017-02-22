@@ -13,8 +13,7 @@
     "url": "https://github.com/cancerberoSgx/js-doc-autogen.git"
   },
   "devDependencies": {
-    "jasmine": "^2.5.3",
-    "short-jsdoc": "^0.2.8"
+    "jasmine": "^2.5.3"
   },
   "dependencies": {
     "esprima": "^3.1.3",

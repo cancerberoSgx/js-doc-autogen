@@ -15,12 +15,35 @@ var _ = require('underscore')
 
 var nashorn = {}
 
-var keys = Object.getOwnPropertyNames(_GLOBAL)
+var keys = [
+	'arguments', 'parseInt', 'parseFloat', 'isNaN', 'isFinite', 'encodeURI', 'encodeURIComponent', 'decodeURI',
+	'decodeURIComponent', 'escape', 'unescape', 'print', 'load', 'loadWithNewGlobal', 'exit', 'quit', 'NaN', 
+	'Infinity', 'undefined', 'eval', 'Object', 'Function', 'Array', 'String', 'Boolean', 'Number', 'Math', 'Error',
+	'ReferenceError', 'SyntaxError', 'TypeError', 'Packages', 'com', 'edu', 'java', 'javafx', 'javax', 'org',
+	// '__FILE__', '__DIR__', '__LINE__', 
+	'Date', 'RegExp', 'JSON', 
+	'JSAdapter', 
+	'EvalError', 
+	'RangeError', 
+	'URIError', 
+	'ArrayBuffer', 'DataView', 'Int8Array', 'Uint8Array', 
+	'Uint8ClampedArray', 'Int16Array', 'Uint16Array',
+	'Int32Array', 'Uint32Array', 'Float32Array', 'Float64Array', 
+	'JavaImporter', 'Java',
+	// 'tool', '_GLOBAL', 
+	// 'global', 
+	// 'window', 
+	// 'engifyTool', 
+	// 'console', 'globalThis', 'excludeNames_', '_visitMaxCount', '_visitCount', 
+	// '___should_neverneverhappen12322'
+]
+
+// var keys = Object.getOwnPropertyNames(_GLOBAL)
 _.each(keys, function(k){nashorn[k]=_GLOBAL[k]})
 
 var context = {
-	nashorn: nashorn,
-	foo:{bar: 'string'}
+	nashorn: nashorn
+	// foo:{bar: 'string'}
 }
 
 var config = {
@@ -30,6 +53,18 @@ var config = {
 	handleCycles: true
 }
 
+
+var rhinoObjectPropertyIterator = function(object, fn)
+{
+	var keys = Object.getOwnPropertyNames(object)
+	// console.log(keys.join('", "'))
+	_.each(keys, function(key) 
+	{
+		var value = object[key]
+		fn(key, value)
+	})
+}
+docgen.metadata.setObjectPropertiesIterator(rhinoObjectPropertyIterator)
 
 docgen.main(config)
 var jsdoc = config.buffer.join('\n')
