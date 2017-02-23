@@ -49,6 +49,10 @@ describe('first ones', ()=>
 		expect(s.indexOf('@class a1.a2.a3.a4.a5.a6')!==-1).toBe(true)
 		expect(s.indexOf('@method shouldneverpass')==-1).toBe(true)
 
+		//property types
+		expect(s.indexOf('@property {String} foo')!==-1).toBe(true)
+		
+
 		// console.log(s)
 	})
 

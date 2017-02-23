@@ -55,7 +55,8 @@ var generateJsDoc = function(config)
 			buffer.push('@class '+c.absoluteName)
 			_.each(c.properties, function(p)
 			{
-				buffer.push('@property ' + p.name)
+				var type = p.type ? (' {' + p.type + '} ') : ' '
+				buffer.push('@property' + type + p.name)
 			})
 			_.each(c.methods, function(m)
 			{
