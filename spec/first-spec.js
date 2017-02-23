@@ -171,7 +171,7 @@ describe('first ones', ()=>
 		}
 		docgen.main(config)
 		var ast = config.astOutput
-		// console.log(JSON.stringify(ast,0,2))
+		console.log(JSON.stringify(ast,0,2))
 		expect(ast.properties.first.objectMetadata.anObject.objectMetadata.method1.signature.params[0]).toBe('averygoodparameter')
 	})
 
