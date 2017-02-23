@@ -331,9 +331,9 @@ describe('first ones', ()=>
 			buffer.push(name + type)
 			// console.log(p)
 		})
-	// console.log('\n'+buffer.join('\n'))
+	console.log('\n'+buffer.join('\n'))
 
-		console.log(JSON.stringify(ast,0,2))
+		// console.log(JSON.stringify(ast,0,2))
 		// expect(ast.objectMetadata.first.objectMetadata.anObject.objectMetadata.method1.signature.params[0]).toBe('averygoodparameter')
 	})
 

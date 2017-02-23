@@ -128,7 +128,7 @@ var extractObjectMetadatas = function(config)
 		else if(config.recurse && metadata.type=='Array' && value && value.length)
 		{
 			config2.sourceObject = value[0]
-			_.extend(result[key], {objectMetadata: extractObjectMetadatas(config2)})
+			_.extend(result[key], {objectMetadata: {0: extractObjectMetadatas(config2)}})
 		}
 	})
 	myMetadata.objectMetadata = result
