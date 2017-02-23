@@ -18,7 +18,7 @@ var main = function(config)
 	{
 		throw Error('Aborting, please provide an outputImplementation. Some possible values: shortjsdoc, jsonschema')
 	}
-	var generateOutput = require('./output-'+outputImplementation).generate
+	var generateOutput = _.isFunction(outputImplementation) ? outputImplementation : require('./output-'+outputImplementation).generate
 
 	globalThis = config.targetObjects
 

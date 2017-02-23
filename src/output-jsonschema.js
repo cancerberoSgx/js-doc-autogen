@@ -31,8 +31,8 @@ var doJsonSchemaObject = function(metadata, schemaNode, level)
 		{
 			var jsprop = {}
 			doJsonSchemaObject(p, jsprop, level+1)
-			schemaNode.properties = schemaNode.properties || {}
-			schemaNode.properties[pname] = jsprop
+			schemaNode.objectMetadata = schemaNode.objectMetadata || {}
+			schemaNode.objectMetadata[pname] = jsprop
 		})
 	}
 	else if(metadata.type=='Array') //TODO: items!

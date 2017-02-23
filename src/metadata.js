@@ -128,7 +128,7 @@ var extractObjectMetadatas = function(config)
 		else if(config.recurse && metadata.type=='Array' && value && value.length)
 		{
 			config2.sourceObject = value[0]
-			_.extend(result[key], {arrayItemMetadata: extractObjectMetadatas(config2)})
+			_.extend(result[key], {objectMetadata: extractObjectMetadatas(config2)})
 		}
 	})
 	myMetadata.objectMetadata = result
@@ -151,7 +151,7 @@ var excludeNames = function(absoluteName)
 	return _.find(excludeNames_, function(exc){return absoluteName.indexOf(exc)!==-1})
 }
 
-var visitObjectMetadata = function(metadata, name, parentName, level, visitor)
+var visitObjectMetadata = function(metadata, name, parentName, level, visitor, parentMetadata)
 {
 	level = level || 0
 	parentName = parentName || ''
@@ -162,13 +162,14 @@ var visitObjectMetadata = function(metadata, name, parentName, level, visitor)
 	}
 	var visitable = {
 		name: name, 
-		absoluteName: absoluteName
+		absoluteName: absoluteName,
+		parentMetadata: parentMetadata
 	}
 	_.extend(visitable, metadata)
 	visitor(visitable)
 	_.each(metadata.objectMetadata, function(childMeta, childName)
 	{
-		visitObjectMetadata(childMeta, childName, absoluteName, level+1, visitor)
+		visitObjectMetadata(childMeta, childName, absoluteName, level+1, visitor, metadata)
 	})
 }
 

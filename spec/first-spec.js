@@ -145,7 +145,7 @@ describe('first ones', ()=>
 		var schema = JSON.parse(s)
 		// console.log(schema)
 
-		expect(_.find(schema, (s)=>{return s.title=='first'}).properties.hello.type).toBe('string')
+		expect(_.find(schema, (s)=>{return s.title=='first'}).objectMetadata.hello.type).toBe('string')
 
 	})
 
@@ -158,7 +158,8 @@ describe('first ones', ()=>
 				anObject: {
 					foo: '0who',
 					method1: function(averygoodparameter){},
-					sudo: {password: function(){}}
+					sudo: {password: function(){}},
+					anArray: [{objInArrProp: true}]
 				}
 			}
 			,
@@ -171,8 +172,12 @@ describe('first ones', ()=>
 		}
 		docgen.main(config)
 		var ast = config.astOutput
-		console.log(JSON.stringify(ast,0,2))
-		expect(ast.properties.first.objectMetadata.anObject.objectMetadata.method1.signature.params[0]).toBe('averygoodparameter')
+		// console.log(JSON.stringify(,0,2))
+		// expect()
+		expect(ast.objectMetadata.first.objectMetadata.anObject.objectMetadata.anArray.objectMetadata.type).toBe('Object')
+		expect(ast.objectMetadata.first.objectMetadata.anObject.objectMetadata.anArray.objectMetadata.objectMetadata.objInArrProp.type).toBe('Boolean')
+
+		expect(ast.objectMetadata.first.objectMetadata.anObject.objectMetadata.method1.signature.params[0]).toBe('averygoodparameter')
 	})
 
 
@@ -227,9 +232,9 @@ describe('first ones', ()=>
 		// expect(s.indexOf('o1.cycle1.o1')!=-1).toBe(true)
 		// console.log(s)
 
-		expect(ast.properties.o1.objectMetadata.cycle1.objectMetadata.o1.type).toBe('Object')
+		expect(ast.objectMetadata.o1.objectMetadata.cycle1.objectMetadata.o1.type).toBe('Object')
 
-		expect(ast.properties.o1.objectMetadata.cycle1.objectMetadata.o1.type).toBe('Object')
+		expect(ast.objectMetadata.o1.objectMetadata.cycle1.objectMetadata.o1.type).toBe('Object')
 	})
 
 	
@@ -250,6 +255,92 @@ describe('first ones', ()=>
 	// 	console.log(JSON.stringify(ast,0,2))
 	// 	// expect(ast.classes.first.objectMetadata.anObject.objectMetadata.method1.signature.params[0]).toBe('averygoodparameter')
 	// })
+
+
+
+	it('output-short-jsdoc-ast2', ()=>
+	{
+		var context = {
+			first: {
+				hello: 'world', fn: function(){}, 
+				anObject: {
+					foo: '0who',
+					method1: function(){},
+					sudo: {password: function(){}},
+					anArray: [{objInArrProp: true}]
+				}
+			}
+		}
+		var config = {
+			target: context,
+			outputImplementation: 'shortjsdoc-ast',
+			excludeNames: ['sudo.password']
+		}
+		var buffer2 = docgen.main(config)
+		var ast = JSON.parse(buffer2.join(''))
+
+		var buffer = []
+		_.each(ast.classes, function(c, cname)
+		{
+			buffer.push(c.absoluteName +' (Object)')
+			_.each(c.properties, function(p)
+			{
+				buffer.push(p.absoluteName+ ' ('+p.type+')')
+			})
+			_.each(c.methods, function(p)
+			{
+				buffer.push(p.absoluteName+ ' (Function)')
+			})
+		})
+		// console.log(buffer.join('\n'))
+	})
+
+
+
+	it('output-ast2', ()=>
+	{
+		var context = {
+			first: {
+				hello: 'world', fn: function(){}, 
+				anObject: {
+					method1: function(averygoodparameter){},
+					anArray: [{objInArrProp: true}]
+				}
+			}
+		}
+		var config = {
+			target: context,
+			outputImplementation: 'ast'
+		}
+		docgen.main(config)
+		var ast = config.astOutput
+
+		var visitObjectMetadata = require('../src/metadata').visitObjectMetadata
+
+		var buffer = []
+		visitObjectMetadata(ast, 'bigName', '', 0, function(p)
+		{
+			var type = p.type ? (' ('+p.type+')') : ''
+			var name = p.absoluteName
+
+			if(p.parentMetadata && p.parentMetadata.type=='Array')
+			{
+				// type = '[0]' + type
+				name = p.absoluteName.substring(0, p.absoluteName.lastIndexOf('.'))+'[0]'+p.absoluteName.substring(p.absoluteName.lastIndexOf('.'), p.absoluteName.length)
+			}
+			buffer.push(name + type)
+			// console.log(p)
+		})
+	// console.log('\n'+buffer.join('\n'))
+
+		// console.log(JSON.stringify(ast,0,2))
+		// expect(ast.objectMetadata.first.objectMetadata.anObject.objectMetadata.method1.signature.params[0]).toBe('averygoodparameter')
+	})
+
+
+
+
+
 
 
 })
