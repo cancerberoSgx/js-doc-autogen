@@ -172,10 +172,10 @@ describe('first ones', ()=>
 		}
 		docgen.main(config)
 		var ast = config.astOutput
-		// console.log(JSON.stringify(,0,2))
+		// console.log(JSON.stringify(ast.objectMetadata.first.objectMetadata.anObject.objectMetadata.anArray.objectMetadata[0],0,2))
 		// expect()
-		expect(ast.objectMetadata.first.objectMetadata.anObject.objectMetadata.anArray.objectMetadata.type).toBe('Object')
-		expect(ast.objectMetadata.first.objectMetadata.anObject.objectMetadata.anArray.objectMetadata.objectMetadata.objInArrProp.type).toBe('Boolean')
+		expect(ast.objectMetadata.first.objectMetadata.anObject.objectMetadata.anArray.objectMetadata[0].type).toBe('Object')
+		expect(ast.objectMetadata.first.objectMetadata.anObject.objectMetadata.anArray.objectMetadata[0].objectMetadata.objInArrProp.type).toBe('Boolean')
 
 		expect(ast.objectMetadata.first.objectMetadata.anObject.objectMetadata.method1.signature.params[0]).toBe('averygoodparameter')
 	})
@@ -322,19 +322,10 @@ describe('first ones', ()=>
 		{
 			var type = p.type ? (' ('+p.type+')') : ''
 			var name = p.absoluteName
-
-			if(p.parentMetadata && p.parentMetadata.type=='Array')
-			{
-				// type = '[0]' + type
-				name = p.absoluteName.substring(0, p.absoluteName.lastIndexOf('.'))+'[0]'+p.absoluteName.substring(p.absoluteName.lastIndexOf('.'), p.absoluteName.length)
-			}
 			buffer.push(name + type)
 			// console.log(p)
 		})
-	console.log('\n'+buffer.join('\n'))
-
-		// console.log(JSON.stringify(ast,0,2))
-		// expect(ast.objectMetadata.first.objectMetadata.anObject.objectMetadata.method1.signature.params[0]).toBe('averygoodparameter')
+		// console.log('\n'+buffer.join('\n'))
 	})
 
 
