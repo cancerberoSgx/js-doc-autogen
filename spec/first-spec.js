@@ -301,10 +301,11 @@ describe('first ones', ()=>
 	{
 		var context = {
 			first: {
-				hello: 'world', fn: function(){}, 
+				// hello: 'world', fn: function(){}, 
 				anObject: {
-					method1: function(averygoodparameter){},
-					anArray: [{objInArrProp: true}]
+					// method1: function(averygoodparameter){},
+					// anArray: [{objInArrProp: true}, {objInArrProp: true}, {objInArrProp: true}],
+					second: ['hey', 'jude']
 				}
 			}
 		}
@@ -314,6 +315,7 @@ describe('first ones', ()=>
 		}
 		docgen.main(config)
 		var ast = config.astOutput
+		// console.log(JSON.stringify(ast,0,2))
 
 		var visitObjectMetadata = require('../src/metadata').visitObjectMetadata
 

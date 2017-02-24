@@ -86,7 +86,7 @@ var extractObjectMetadatas = function(config)
 	{
 		return
 	}
-	var result = {}
+	
 	var myMetadata = getJsObjectMetadata(sourceObject)
 	if(config.handleCycles)
 	{
@@ -101,37 +101,47 @@ var extractObjectMetadatas = function(config)
 	}
 
 	//heads up ! using _.each for iterating object properties won't visit inherited properties. Concretely, browser's document
-	
-	getObjectPropertiesIterator()(sourceObject, function(key, value)
+	if(myMetadata.type=='Object')
 	{
-		if(config.handleCycles && key == veryStrangePropertyNameForCycles)
+		var result = {}
+		getObjectPropertiesIterator()(sourceObject, function(key, value)
 		{
-			return
-		}
-		var metadata = getJsObjectMetadata(value)
-		result[key] = metadata
+			if(config.handleCycles && key == veryStrangePropertyNameForCycles)
+			{
+				return
+			}
+			var metadata = getJsObjectMetadata(value)
+			// if(metadata.value=='y')
+			// {
+			// 	debugger;
+			// }
+			// console.log(metadata)
+			result[key] = metadata
 
-		var config2 = {
-			sourceObjectName: key, 
-			recurse: config.recurse, 
-			handleCycles: config.handleCycles,
-			level: config.level + 1,
-			levelMax: config.levelMax
-		}
+			var config2 = {
+				sourceObjectName: key, 
+				recurse: config.recurse, 
+				handleCycles: config.handleCycles,
+				level: config.level + 1,
+				levelMax: config.levelMax
+			}
 
-		// console.log('getObjectPropertiesIterator key '+key + ' - ' + metadata.type)
-		if(config.recurse && metadata.type == 'Object') 
-		{
-			config2.sourceObject = value
-			_.extend(result[key], extractObjectMetadatas(config2))
-		}
-		else if(config.recurse && metadata.type=='Array' && value && value.length)
-		{
-			config2.sourceObject = value[0]
-			_.extend(result[key], {objectMetadata: {0: extractObjectMetadatas(config2)}})
-		}
-	})
-	myMetadata.objectMetadata = result
+			// console.log('getObjectPropertiesIterator key '+key + ' - ' + metadata.type)
+			if(config.recurse && metadata.type == 'Object') 
+			{
+				config2.sourceObject = value
+				_.extend(result[key], extractObjectMetadatas(config2))
+			}
+			else if(config.recurse && metadata.type=='Array' && value && value.length)
+			{
+				config2.sourceObject = value[0]
+				_.extend(result[key], {objectMetadata: {0: extractObjectMetadatas(config2)}})
+			}
+		})
+
+		myMetadata.objectMetadata = result
+	}
+	
 	return myMetadata
 }
 
@@ -153,6 +163,11 @@ var excludeNames = function(absoluteName)
 
 var visitObjectMetadata = function(metadata, name, parentName, level, visitor, parentMetadata)
 {
+	// if(name==1)
+	// {
+	// 	debugger;
+	// }
+	// console.log(name)
 	level = level || 0
 	parentName = parentName || ''
 	var absoluteName =  parentName ? (parentName+'.'+name) : name
