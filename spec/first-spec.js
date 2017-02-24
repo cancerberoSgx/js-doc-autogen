@@ -297,15 +297,16 @@ describe('first ones', ()=>
 
 
 
-	it('output-ast2', ()=>
+	it('output-text1', ()=>
 	{
 		var context = {
 			first: {
-				// hello: 'world', fn: function(){}, 
+				hello: 'world', fn: function(){}, 
 				anObject: {
-					// method1: function(averygoodparameter){},
-					// anArray: [{objInArrProp: true}, {objInArrProp: true}, {objInArrProp: true}],
-					second: ['hey', 'jude']
+					method1: function(averygoodparameter){},
+					anArray: [{objInArrProp: true}, {objInArrProp: true}, {objInArrProp: true}],
+					second: ['hey', 'jude'],
+					third: [{nesting: {foo: 5, bar: [{nesting2: 9}]}}]
 				}
 			}
 		}
@@ -315,7 +316,6 @@ describe('first ones', ()=>
 		}
 		docgen.main(config)
 		var ast = config.astOutput
-		// console.log(JSON.stringify(ast,0,2))
 
 		var visitObjectMetadata = require('../src/metadata').visitObjectMetadata
 
@@ -325,9 +325,11 @@ describe('first ones', ()=>
 			var type = p.type ? (' ('+p.type+')') : ''
 			var name = p.absoluteName
 			buffer.push(name + type)
-			// console.log(p)
 		})
-		// console.log('\n'+buffer.join('\n'))
+		var output = buffer.join('\n')
+
+		expect(output.indexOf('bigName.first.anObject.third.0.nesting.bar.0.nesting2 (Number)')!=-1).toBe(true)
+		// console.log('\n'+output)
 	})
 
 
