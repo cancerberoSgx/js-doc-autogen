@@ -3,6 +3,7 @@ var _ = require('underscore')
 
 //heads up ! we are making sure we require all implementations so browserify bundle won't fail when running bundle in other engines
 require('./output-shortjsdoc')
+require('./output-typescript')
 require('./output-ast')
 
 

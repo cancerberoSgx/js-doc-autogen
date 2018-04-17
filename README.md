@@ -2,7 +2,27 @@
 
 # What?
 
+* This is a Research project *
+
 Automatic documentation / descriptions of live javascript objects in several formats
+
+The idea of this tool is to explore and describe the structure of given unknown javascript object
+
+t can run anywhere thanks to browserify: we can run it in node, browser, rhino, nashhorn, etc
+
+output implementation are plugins - there are now several different type of outputs (jsdoc, jsonschema, typescript descriptions ) but others can be implemented as funcions
+
+# Sceniarios 
+
+ * you are using an undocumented library or a library poorly documented in a readme. But you areprograming in a intellisence editor and you wnat autocomplete to work faster - so you use this tool against the library's root object.
+
+ * you are for some reason programming in a new javascript environment like rhino and don't know nothing about its globals or what's available. Run the tool agains the global context (this) to explore it
+
+# install 
+
+```sh
+npm install --save js-doc-autogen
+```
 
 # Using it in node.js
 
@@ -51,22 +71,21 @@ console.log('jsdoc available in variable jsdoc. Execute copy(jsdoc) in the conso
 </script>
 ```
 
+# Configuration properties
 
-# sdoc output example
+ * target: the target object to document. It will be examine ant if it contains circular dependencies probably it could fail. Also the object coul dbe unusable / contaminated after using the tool
+ * mainModule: a name to put to the root output object that contains everything
+ * outputImplementation: could be any of: shortjsdoc, jsonschema
+
+
+# jsdoc output example
 
 The following is documentation automatically generated from globals of different js implementations like node, browser, rhino, nashorn, etc
 
 [DEMO](https://cancerberosgx.github.io/js-doc-autogen/examples/other-engines-examples/jsdoc-output/)
 
-# automatic object discovery and documentation
 
-* This is a Research project *
 
-The idea of this tool is to explire a live js environment at some point, and from the properties discovered build some documentation  in the form of object oriented programming - json-schema
-
-Requirement: output is pluggable - now we have shortjsdoc impl but it couold also be json-schema (examine in editor)
-
-Requirement: it can run anywhere thanks to browserify: we can run it in node, browser, rhino, etc
 
 # generate bundle and run it in browser
 

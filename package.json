@@ -1,12 +1,12 @@
 {
   "name": "js-doc-autogen",
-  "version": "0.0.2",
-  "description": "",
+  "version": "0.0.3",
+  "description": "Automatic documentation / descriptions of live javascript objects in several formats",
   "main": "./src/index.js",
   "scripts": {
     "test": "node node_modules/jasmine/bin/jasmine.js"
   },
-  "author": "",
+  "author": "Sebastian Gurin",
   "license": "ISC",
   "repository": {
     "type": "git",

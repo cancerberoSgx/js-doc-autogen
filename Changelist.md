@@ -14,3 +14,7 @@
  * visitMaxCount config property (visit count limit)
  * levelMax config property (stack/recursion limit)
  * rhino and nashorn working examples
+ * typescript
+ * added nodejs example in readme and installation / argumentation notes
+
+## 0.0.3
