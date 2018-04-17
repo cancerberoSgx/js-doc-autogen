@@ -1,12 +1,64 @@
 [![Build Status](https://travis-ci.org/cancerberoSgx/short-jsdoc.png?branch=master)](https://travis-ci.org/cancerberoSgx/js-doc-autogen)
 
-#jsdoc output example
+# What?
+
+Automatic documentation / descriptions of live javascript objects in several formats
+
+# Using it in node.js
+
+```js
+var docgen = require('js-doc-autogen')
+var context = {
+    someCoolLibraryWithoutFormalDocumentation: require('cool-foo')
+}
+var config = {
+    target: context,
+    outputImplementation: 'jsonschema',
+    excludeNames: ['something.very.private'],
+    levelMax:6
+}
+var buffer = docgen.main(config)
+var s = buffer.join('\n')
+```
+
+# Using it in the browser to examine DOM
+
+(but you could examine any object of a n on documented library)
+
+```html
+<script src="../dist/bundle.js"></script>
+<script>
+var docgen = require('js-doc-autogen')
+var context = {
+    document: document,
+    window: window,
+    foo: {p: 9}
+}
+var config = {
+    target: context,
+    mainModule: 'html',
+    outputImplementation: 'shortjsdoc',
+    excludeNames: ['document.doctype']
+    ,levelMax: 4
+}
+var buffer = docgen.main(config)
+var jsdoc = buffer.join('\n')
+var jsdoc = '/*\n'+jsdoc+'\n*/'
+window.jsdoc = jsdoc
+console.log(jsdoc)
+// copy(s)
+console.log('jsdoc available in variable jsdoc. Execute copy(jsdoc) in the console to copy jsdoc to clipboard. ')
+</script>
+```
+
+
+# sdoc output example
 
 The following is documentation automatically generated from globals of different js implementations like node, browser, rhino, nashorn, etc
 
 [DEMO](https://cancerberosgx.github.io/js-doc-autogen/examples/other-engines-examples/jsdoc-output/)
 
-#automatic object discovery and documentation
+# automatic object discovery and documentation
 
 * This is a Research project *
 
@@ -16,7 +68,7 @@ Requirement: output is pluggable - now we have shortjsdoc impl but it couold als
 
 Requirement: it can run anywhere thanks to browserify: we can run it in node, browser, rhino, etc
 
-#generate bundle and run it in browser
+# generate bundle and run it in browser
 
     browserify -r .:js-doc-autogen -r ./src/output-shortjsdoc.js:./output-shortjsdoc -r underscore -d > dist/bundle.js
     
@@ -24,34 +76,7 @@ Requirement: it can run anywhere thanks to browserify: we can run it in node, br
 
 You will see a jsdoc fragment in the console. 
 
-#Other files
+# Other files
 
  * [TODO](https://github.com/cancerberoSgx/js-doc-autogen/blob/master/TODO.md)
  * [Changelist](https://github.com/cancerberoSgx/js-doc-autogen/blob/master/Changelist.md)
-
-#using it in the browser to examine DOM
-
-    <script src="../dist/bundle.js"></script>
-    <script>
-    var docgen = require('js-doc-autogen')
-    var context = {
-        document: document,
-        window: window,
-        foo: {p: 9}
-    }
-    var config = {
-        target: context,
-        mainModule: 'html',
-        outputImplementation: 'shortjsdoc',
-        excludeNames: ['document.doctype']
-        // ,visitMaxCount: 1000
-        ,levelMax: 4
-    }
-    var buffer = docgen.main(config)
-    var jsdoc = buffer.join('\n')
-    var jsdoc = '/*\n'+jsdoc+'\n*/'
-    window.jsdoc = jsdoc
-    console.log(jsdoc)
-    // copy(s)
-    console.log('jsdoc available in variable jsdoc. Execute copy(jsdoc) in the console to copy jsdoc to clipboard. ')
-    </script>
